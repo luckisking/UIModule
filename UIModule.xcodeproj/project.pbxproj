@@ -14,28 +14,7 @@
 		C89D71FF22E7EBA80048A1BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C89D71FE22E7EBA80048A1BD /* Assets.xcassets */; };
 		C89D720222E7EBA80048A1BD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C89D720022E7EBA80048A1BD /* LaunchScreen.storyboard */; };
 		C89D720522E7EBA80048A1BD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D720422E7EBA80048A1BD /* main.m */; };
-		C89D723B22E7FEB10048A1BD /* DXVipServiceMode.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D720D22E7FEB10048A1BD /* DXVipServiceMode.m */; };
-		C89D723C22E7FEB10048A1BD /* DXVipEverydayPlanController.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D721022E7FEB10048A1BD /* DXVipEverydayPlanController.m */; };
-		C89D723D22E7FEB10048A1BD /* DXVipServiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D721122E7FEB10048A1BD /* DXVipServiceController.m */; };
-		C89D723E22E7FEB10048A1BD /* DXVipWebController.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D721522E7FEB10048A1BD /* DXVipWebController.m */; };
-		C89D723F22E7FEB10048A1BD /* DXVIPWrittenTestDateController.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D721822E7FEB10048A1BD /* DXVIPWrittenTestDateController.m */; };
-		C89D724022E7FEB10048A1BD /* DXVipLearnPathController.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D721922E7FEB10048A1BD /* DXVipLearnPathController.m */; };
-		C89D724122E7FEB10048A1BD /* DXVipGuidanceEvaluationController.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D721A22E7FEB10048A1BD /* DXVipGuidanceEvaluationController.m */; };
-		C89D724222E7FEB10048A1BD /* DXVipLookCourseView.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D721F22E7FEB10048A1BD /* DXVipLookCourseView.m */; };
-		C89D724322E7FEB10048A1BD /* DXVipWTDateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D722022E7FEB10048A1BD /* DXVipWTDateView.m */; };
-		C89D724422E7FEB10048A1BD /* DXVipSelectMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D722122E7FEB10048A1BD /* DXVipSelectMenuView.m */; };
-		C89D724522E7FEB10048A1BD /* DXVipServiceView.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D722422E7FEB10048A1BD /* DXVipServiceView.m */; };
-		C89D724622E7FEB10048A1BD /* DXVipEverydayPlanView.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D722522E7FEB10048A1BD /* DXVipEverydayPlanView.m */; };
-		C89D724722E7FEB10048A1BD /* DXVipDoWorkView.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D722822E7FEB10048A1BD /* DXVipDoWorkView.m */; };
-		C89D724822E7FEB10048A1BD /* DXVipServiceApiRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D722A22E7FEB10048A1BD /* DXVipServiceApiRequest.m */; };
-		C89D724922E7FEB10048A1BD /* DXVipServiceNetWork.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D722C22E7FEB10048A1BD /* DXVipServiceNetWork.m */; };
-		C89D724A22E7FEB10048A1BD /* DXCreateUI.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D723222E7FEB10048A1BD /* DXCreateUI.m */; };
-		C89D724B22E7FEB10048A1BD /* DXVipServiceBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D723422E7FEB10048A1BD /* DXVipServiceBaseView.m */; };
-		C89D724C22E7FEB10048A1BD /* NullSafe.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D723522E7FEB10048A1BD /* NullSafe.m */; };
-		C89D724D22E7FEB10048A1BD /* DXVipServiceBaseMode.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D723622E7FEB10048A1BD /* DXVipServiceBaseMode.m */; };
-		C89D724E22E7FEB10048A1BD /* MBProgressHUD+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D723722E7FEB10048A1BD /* MBProgressHUD+Extension.m */; };
-		C89D724F22E7FEB10048A1BD /* DXVipServiceBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D723822E7FEB10048A1BD /* DXVipServiceBaseViewController.m */; };
-		C89D725322E80A490048A1BD /* Test.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D725222E80A490048A1BD /* Test.m */; };
+		C89D739022E83D8E0048A1BD /* JQPopSelectMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D738F22E83D8E0048A1BD /* JQPopSelectMenuView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,50 +30,8 @@
 		C89D720122E7EBA80048A1BD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C89D720322E7EBA80048A1BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C89D720422E7EBA80048A1BD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		C89D720D22E7FEB10048A1BD /* DXVipServiceMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipServiceMode.m; sourceTree = "<group>"; };
-		C89D720E22E7FEB10048A1BD /* DXVipServiceMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipServiceMode.h; sourceTree = "<group>"; };
-		C89D721022E7FEB10048A1BD /* DXVipEverydayPlanController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipEverydayPlanController.m; sourceTree = "<group>"; };
-		C89D721122E7FEB10048A1BD /* DXVipServiceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipServiceController.m; sourceTree = "<group>"; };
-		C89D721222E7FEB10048A1BD /* DXVipGuidanceEvaluationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipGuidanceEvaluationController.h; sourceTree = "<group>"; };
-		C89D721322E7FEB10048A1BD /* DXVipLearnPathController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipLearnPathController.h; sourceTree = "<group>"; };
-		C89D721422E7FEB10048A1BD /* DXVIPWrittenTestDateController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVIPWrittenTestDateController.h; sourceTree = "<group>"; };
-		C89D721522E7FEB10048A1BD /* DXVipWebController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipWebController.m; sourceTree = "<group>"; };
-		C89D721622E7FEB10048A1BD /* DXVipEverydayPlanController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipEverydayPlanController.h; sourceTree = "<group>"; };
-		C89D721722E7FEB10048A1BD /* DXVipServiceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipServiceController.h; sourceTree = "<group>"; };
-		C89D721822E7FEB10048A1BD /* DXVIPWrittenTestDateController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVIPWrittenTestDateController.m; sourceTree = "<group>"; };
-		C89D721922E7FEB10048A1BD /* DXVipLearnPathController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipLearnPathController.m; sourceTree = "<group>"; };
-		C89D721A22E7FEB10048A1BD /* DXVipGuidanceEvaluationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipGuidanceEvaluationController.m; sourceTree = "<group>"; };
-		C89D721B22E7FEB10048A1BD /* DXVipWebController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipWebController.h; sourceTree = "<group>"; };
-		C89D721D22E7FEB10048A1BD /* DXVipEverydayPlanView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipEverydayPlanView.h; sourceTree = "<group>"; };
-		C89D721E22E7FEB10048A1BD /* DXVipServiceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipServiceView.h; sourceTree = "<group>"; };
-		C89D721F22E7FEB10048A1BD /* DXVipLookCourseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipLookCourseView.m; sourceTree = "<group>"; };
-		C89D722022E7FEB10048A1BD /* DXVipWTDateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipWTDateView.m; sourceTree = "<group>"; };
-		C89D722122E7FEB10048A1BD /* DXVipSelectMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipSelectMenuView.m; sourceTree = "<group>"; };
-		C89D722222E7FEB10048A1BD /* DXVipDoWorkView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipDoWorkView.h; sourceTree = "<group>"; };
-		C89D722322E7FEB10048A1BD /* DXVipLookCourseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipLookCourseView.h; sourceTree = "<group>"; };
-		C89D722422E7FEB10048A1BD /* DXVipServiceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipServiceView.m; sourceTree = "<group>"; };
-		C89D722522E7FEB10048A1BD /* DXVipEverydayPlanView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipEverydayPlanView.m; sourceTree = "<group>"; };
-		C89D722622E7FEB10048A1BD /* DXVipWTDateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipWTDateView.h; sourceTree = "<group>"; };
-		C89D722722E7FEB10048A1BD /* DXVipSelectMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipSelectMenuView.h; sourceTree = "<group>"; };
-		C89D722822E7FEB10048A1BD /* DXVipDoWorkView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipDoWorkView.m; sourceTree = "<group>"; };
-		C89D722A22E7FEB10048A1BD /* DXVipServiceApiRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipServiceApiRequest.m; sourceTree = "<group>"; };
-		C89D722B22E7FEB10048A1BD /* DXVipServiceNetWork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipServiceNetWork.h; sourceTree = "<group>"; };
-		C89D722C22E7FEB10048A1BD /* DXVipServiceNetWork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipServiceNetWork.m; sourceTree = "<group>"; };
-		C89D722D22E7FEB10048A1BD /* DXVipServiceApiRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipServiceApiRequest.h; sourceTree = "<group>"; };
-		C89D722F22E7FEB10048A1BD /* DXVipServiceBaseMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipServiceBaseMode.h; sourceTree = "<group>"; };
-		C89D723022E7FEB10048A1BD /* DXVipDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipDefine.h; sourceTree = "<group>"; };
-		C89D723122E7FEB10048A1BD /* MBProgressHUD+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD+Extension.h"; sourceTree = "<group>"; };
-		C89D723222E7FEB10048A1BD /* DXCreateUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXCreateUI.m; sourceTree = "<group>"; };
-		C89D723322E7FEB10048A1BD /* DXVipServiceBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipServiceBaseViewController.h; sourceTree = "<group>"; };
-		C89D723422E7FEB10048A1BD /* DXVipServiceBaseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipServiceBaseView.m; sourceTree = "<group>"; };
-		C89D723522E7FEB10048A1BD /* NullSafe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NullSafe.m; sourceTree = "<group>"; };
-		C89D723622E7FEB10048A1BD /* DXVipServiceBaseMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipServiceBaseMode.m; sourceTree = "<group>"; };
-		C89D723722E7FEB10048A1BD /* MBProgressHUD+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD+Extension.m"; sourceTree = "<group>"; };
-		C89D723822E7FEB10048A1BD /* DXVipServiceBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXVipServiceBaseViewController.m; sourceTree = "<group>"; };
-		C89D723922E7FEB10048A1BD /* DXVipServiceBaseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXVipServiceBaseView.h; sourceTree = "<group>"; };
-		C89D723A22E7FEB10048A1BD /* DXCreateUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXCreateUI.h; sourceTree = "<group>"; };
-		C89D725122E80A490048A1BD /* Test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Test.h; sourceTree = "<group>"; };
-		C89D725222E80A490048A1BD /* Test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Test.m; sourceTree = "<group>"; };
+		C89D738E22E83D8E0048A1BD /* JQPopSelectMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JQPopSelectMenuView.h; sourceTree = "<group>"; };
+		C89D738F22E83D8E0048A1BD /* JQPopSelectMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JQPopSelectMenuView.m; sourceTree = "<group>"; };
 		DE90E8E2FC81C280A9008E51 /* Pods-UIModule.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UIModule.release.xcconfig"; path = "Target Support Files/Pods-UIModule/Pods-UIModule.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -139,6 +76,7 @@
 		C89D71F422E7EBA70048A1BD /* UIModule */ = {
 			isa = PBXGroup;
 			children = (
+				C89D738D22E83D810048A1BD /* View */,
 				C89D71F522E7EBA70048A1BD /* AppDelegate.h */,
 				C89D71F622E7EBA70048A1BD /* AppDelegate.m */,
 				C89D71F822E7EBA70048A1BD /* ViewController.h */,
@@ -169,8 +107,6 @@
 		C89D720C22E7FEB10048A1BD /* Mode */ = {
 			isa = PBXGroup;
 			children = (
-				C89D720D22E7FEB10048A1BD /* DXVipServiceMode.m */,
-				C89D720E22E7FEB10048A1BD /* DXVipServiceMode.h */,
 			);
 			path = Mode;
 			sourceTree = "<group>";
@@ -178,18 +114,6 @@
 		C89D720F22E7FEB10048A1BD /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				C89D721022E7FEB10048A1BD /* DXVipEverydayPlanController.m */,
-				C89D721122E7FEB10048A1BD /* DXVipServiceController.m */,
-				C89D721222E7FEB10048A1BD /* DXVipGuidanceEvaluationController.h */,
-				C89D721322E7FEB10048A1BD /* DXVipLearnPathController.h */,
-				C89D721422E7FEB10048A1BD /* DXVIPWrittenTestDateController.h */,
-				C89D721522E7FEB10048A1BD /* DXVipWebController.m */,
-				C89D721622E7FEB10048A1BD /* DXVipEverydayPlanController.h */,
-				C89D721722E7FEB10048A1BD /* DXVipServiceController.h */,
-				C89D721822E7FEB10048A1BD /* DXVIPWrittenTestDateController.m */,
-				C89D721922E7FEB10048A1BD /* DXVipLearnPathController.m */,
-				C89D721A22E7FEB10048A1BD /* DXVipGuidanceEvaluationController.m */,
-				C89D721B22E7FEB10048A1BD /* DXVipWebController.h */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -197,18 +121,6 @@
 		C89D721C22E7FEB10048A1BD /* View */ = {
 			isa = PBXGroup;
 			children = (
-				C89D721D22E7FEB10048A1BD /* DXVipEverydayPlanView.h */,
-				C89D721E22E7FEB10048A1BD /* DXVipServiceView.h */,
-				C89D721F22E7FEB10048A1BD /* DXVipLookCourseView.m */,
-				C89D722022E7FEB10048A1BD /* DXVipWTDateView.m */,
-				C89D722122E7FEB10048A1BD /* DXVipSelectMenuView.m */,
-				C89D722222E7FEB10048A1BD /* DXVipDoWorkView.h */,
-				C89D722322E7FEB10048A1BD /* DXVipLookCourseView.h */,
-				C89D722422E7FEB10048A1BD /* DXVipServiceView.m */,
-				C89D722522E7FEB10048A1BD /* DXVipEverydayPlanView.m */,
-				C89D722622E7FEB10048A1BD /* DXVipWTDateView.h */,
-				C89D722722E7FEB10048A1BD /* DXVipSelectMenuView.h */,
-				C89D722822E7FEB10048A1BD /* DXVipDoWorkView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -216,10 +128,6 @@
 		C89D722922E7FEB10048A1BD /* Api */ = {
 			isa = PBXGroup;
 			children = (
-				C89D722A22E7FEB10048A1BD /* DXVipServiceApiRequest.m */,
-				C89D722B22E7FEB10048A1BD /* DXVipServiceNetWork.h */,
-				C89D722C22E7FEB10048A1BD /* DXVipServiceNetWork.m */,
-				C89D722D22E7FEB10048A1BD /* DXVipServiceApiRequest.h */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -227,18 +135,6 @@
 		C89D722E22E7FEB10048A1BD /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				C89D722F22E7FEB10048A1BD /* DXVipServiceBaseMode.h */,
-				C89D723022E7FEB10048A1BD /* DXVipDefine.h */,
-				C89D723122E7FEB10048A1BD /* MBProgressHUD+Extension.h */,
-				C89D723222E7FEB10048A1BD /* DXCreateUI.m */,
-				C89D723322E7FEB10048A1BD /* DXVipServiceBaseViewController.h */,
-				C89D723422E7FEB10048A1BD /* DXVipServiceBaseView.m */,
-				C89D723522E7FEB10048A1BD /* NullSafe.m */,
-				C89D723622E7FEB10048A1BD /* DXVipServiceBaseMode.m */,
-				C89D723722E7FEB10048A1BD /* MBProgressHUD+Extension.m */,
-				C89D723822E7FEB10048A1BD /* DXVipServiceBaseViewController.m */,
-				C89D723922E7FEB10048A1BD /* DXVipServiceBaseView.h */,
-				C89D723A22E7FEB10048A1BD /* DXCreateUI.h */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -246,10 +142,17 @@
 		C89D725022E80A210048A1BD /* Public */ = {
 			isa = PBXGroup;
 			children = (
-				C89D725122E80A490048A1BD /* Test.h */,
-				C89D725222E80A490048A1BD /* Test.m */,
 			);
 			path = Public;
+			sourceTree = "<group>";
+		};
+		C89D738D22E83D810048A1BD /* View */ = {
+			isa = PBXGroup;
+			children = (
+				C89D738E22E83D8E0048A1BD /* JQPopSelectMenuView.h */,
+				C89D738F22E83D8E0048A1BD /* JQPopSelectMenuView.m */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		E1F0AF5709460C0C8D8972AC /* Pods */ = {
@@ -375,31 +278,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C89D724522E7FEB10048A1BD /* DXVipServiceView.m in Sources */,
 				C89D71FA22E7EBA70048A1BD /* ViewController.m in Sources */,
-				C89D724F22E7FEB10048A1BD /* DXVipServiceBaseViewController.m in Sources */,
 				C89D720522E7EBA80048A1BD /* main.m in Sources */,
-				C89D724B22E7FEB10048A1BD /* DXVipServiceBaseView.m in Sources */,
-				C89D723F22E7FEB10048A1BD /* DXVIPWrittenTestDateController.m in Sources */,
-				C89D724C22E7FEB10048A1BD /* NullSafe.m in Sources */,
-				C89D723C22E7FEB10048A1BD /* DXVipEverydayPlanController.m in Sources */,
-				C89D724A22E7FEB10048A1BD /* DXCreateUI.m in Sources */,
-				C89D723D22E7FEB10048A1BD /* DXVipServiceController.m in Sources */,
-				C89D725322E80A490048A1BD /* Test.m in Sources */,
-				C89D724222E7FEB10048A1BD /* DXVipLookCourseView.m in Sources */,
-				C89D724022E7FEB10048A1BD /* DXVipLearnPathController.m in Sources */,
-				C89D724722E7FEB10048A1BD /* DXVipDoWorkView.m in Sources */,
-				C89D724322E7FEB10048A1BD /* DXVipWTDateView.m in Sources */,
-				C89D723E22E7FEB10048A1BD /* DXVipWebController.m in Sources */,
-				C89D723B22E7FEB10048A1BD /* DXVipServiceMode.m in Sources */,
-				C89D724D22E7FEB10048A1BD /* DXVipServiceBaseMode.m in Sources */,
-				C89D724422E7FEB10048A1BD /* DXVipSelectMenuView.m in Sources */,
+				C89D739022E83D8E0048A1BD /* JQPopSelectMenuView.m in Sources */,
 				C89D71F722E7EBA70048A1BD /* AppDelegate.m in Sources */,
-				C89D724622E7FEB10048A1BD /* DXVipEverydayPlanView.m in Sources */,
-				C89D724122E7FEB10048A1BD /* DXVipGuidanceEvaluationController.m in Sources */,
-				C89D724922E7FEB10048A1BD /* DXVipServiceNetWork.m in Sources */,
-				C89D724822E7FEB10048A1BD /* DXVipServiceApiRequest.m in Sources */,
-				C89D724E22E7FEB10048A1BD /* MBProgressHUD+Extension.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
