@@ -1,0 +1,18 @@
+创建UIModule工程
+上传到git
+git remote add origin https://github.com/sandradd/UIModule.git #关联仓库
+git branch develop #创建分支（如果需要）
+git checkout develop #切换分支（如果需要）
+cd到UIModule工程
+添加pods: pod spec create UIModule https://github.com/sandradd/UIModule.git
+
+操作：
+pod lib lint --allow-warnings
+pod update --verbose --no-repo-update
+
+
+
+git tag -a '新版本号' -m '注释'
+git push --tags
+Open ~/.cocoapods/repos
+
