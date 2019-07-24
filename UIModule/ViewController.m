@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "Test.h"
 
 @interface ViewController ()
 
@@ -17,6 +18,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+   Test *view =  [[Test alloc] initWithFrame:self.view.bounds];
+    view.backgroundColor = [UIColor cyanColor];
+    self.view = view;
 }
 
 
