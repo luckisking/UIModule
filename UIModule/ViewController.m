@@ -19,6 +19,17 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self addUI];
+    self.view.backgroundColor = [UIColor redColor];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        }]];
+        [self presentViewController:alertController animated:YES completion:nil];
+    });
+    
+    
+    
+    
 }
 - (void)addUI {
     [self.view setBackgroundColor:[UIColor cyanColor]];
@@ -54,34 +65,34 @@
 //
 //
 //
-//    JQPopSelectMenuView *view1 = [[JQPopSelectMenuView alloc] initPopWithFrame:CGRectMake(20, 500, 200, 50)
-//                                                                         items:@[@{@"image":@"",@"title":@"管理类联考"},
-//                                                                                 @{@"image":@"",@"title":@"第二学士学位"},
-//                                                                                 @{@"image":@"",@"title":@"在线商学院"},
-//                                                                                 @{@"image":@"",@"title":@"基金从业考试"},
-//                                                                                 @{@"image":@"",@"title":@"会计职称"}]
-//                                                                        action:^(NSInteger index) {
-//                                                                            NSLog(@"点击了");
-//                                                                        }];
-//
-//    view1.delegate = self;
-//    view1.backgroundColor = [UIColor redColor];
-//    [self.view addSubview:view1];
+    JQPopSelectMenuView *view1 = [[JQPopSelectMenuView alloc] initPopWithFrame:CGRectMake(20, 500, 200, 50)
+                                                                         items:@[@{@"image":@"",@"title":@"管理类联考"},
+                                                                                 @{@"image":@"",@"title":@"第二学士学位"},
+                                                                                 @{@"image":@"",@"title":@"在线商学院"},
+                                                                                 @{@"image":@"",@"title":@"基金从业考试"},
+                                                                                 @{@"image":@"",@"title":@"会计职称"}]
+                                                                        action:^(NSInteger index) {
+                                                                            NSLog(@"点击了");
+                                                                        }];
+
+    view1.delegate = self;
+    view1.backgroundColor = [UIColor redColor];
+    [self.view addSubview:view1];
 
     
-    [JQPopSelectMenuView showPopWithFrame:CGRectMake(0, 0, 200, 50)
-                                    items:@[@{@"image":@"",@"title":@"管理类联考"},
-                                            @{@"image":@"",@"title":@"第二学士学位"},
-                                            @{@"image":@"",@"title":@"在线商学院"},
-                                            @{@"image":@"",@"title":@"基金从业考试"},
-                                            @{@"image":@"",@"title":@"会计职称"}]
-                            triangleFrame:CGRectMake(150, -9, 10, 10)
-                                fillColor:[UIColor whiteColor]
-                              strokeColor:[UIColor whiteColor]
-                                 delegate:self
-                                   action:^(NSInteger index) {
-                                       NSLog(@"点击了");
-                                   }];
+//    [JQPopSelectMenuView showPopWithFrame:CGRectMake(0, 0, 200, 50)
+//                                    items:@[@{@"image":@"",@"title":@"管理类联考"},
+//                                            @{@"image":@"",@"title":@"第二学士学位"},
+//                                            @{@"image":@"",@"title":@"在线商学院"},
+//                                            @{@"image":@"",@"title":@"基金从业考试"},
+//                                            @{@"image":@"",@"title":@"会计职称"}]
+//                            triangleFrame:CGRectMake(150, -9, 10, 10)
+//                                fillColor:[UIColor whiteColor]
+//                              strokeColor:[UIColor whiteColor]
+//                                 delegate:self
+//                                   action:^(NSInteger index) {
+//                                       NSLog(@"点击了");
+//                                   }];
 }
 
 - (void)JQPopSelectMenuViewCell:(JQPopSelectMenuTableViewCell *)cell setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
@@ -102,12 +113,12 @@
             make.right.mas_offset(-50);
             make.height.mas_offset(100);
         }];
-        [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(view.mas_bottom);
-            make.left.mas_offset(0);
-            make.right.mas_offset(0);
-            make.height.mas_offset(500);
-        }];
+//        [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.top.mas_equalTo(view.mas_bottom);
+//            make.left.mas_offset(0);
+//            make.right.mas_offset(0);
+//            make.height.mas_offset(500);
+//        }];
     
 }
 

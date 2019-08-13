@@ -29,12 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class JQPopSelectMenuTableViewCell;
 @protocol JQPopSelectMenuViewDelegate <NSObject>
 @optional
-/* 实现了协议的showCustom和hideCustom，以下4个方法将不会触发*/
-- (void)JQPopSelectMenuViewWillShow:(UITableView *)tableView view:(JQPopSelectMenuView *)view ;   //当下拉菜单将要显示时调用
-- (void)JQPopSelectMenuViewDidShow:(UITableView *)tableView view:(JQPopSelectMenuView *)view ;     // 当下拉菜单已经显示时调用
-- (void)JQPopSelectMenuViewWillHidden:(UITableView *)tableView view:(JQPopSelectMenuView *)view ;  // 当下拉菜单将要收起时调用
-- (void)JQPopSelectMenuViewDidHidden:(UITableView *)tableView view:(JQPopSelectMenuView *)view ;   // 当下拉菜单已经收起时调用
-//设置tableView和self的外观 (-----------如要实现自动布局请在此设置---------------)
+//设置tableView和self的外观 (-----------如要实现自动布局请在此设置，请同时设置tableView和view的自动布局 ---------------)
 - (void)JQPopSelectMenuViewAppearanceConfigTableView:(UITableView *)tableView view:(JQPopSelectMenuView *)view;
 //设置cell的外观
 - (void)JQPopSelectMenuViewAppearanceConfigCell:(JQPopSelectMenuTableViewCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath ;
@@ -49,6 +44,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)JQPopSelectMenuViewshowCustom:(UITableView *)tableView view:(JQPopSelectMenuView *)view ;
 - (void)JQPopSelectMenuViewhideCustom:(UITableView *)tableView view:(JQPopSelectMenuView *)view ;
 
+
+/* 实现了协议的showCustom和hideCustom，以下4个方法将不会触发,已废弃*/
+- (void)JQPopSelectMenuViewWillShow:(UITableView *)tableView view:(JQPopSelectMenuView *)view DEPRECATED_MSG_ATTRIBUTE();   //当下拉菜单将要显示时调用
+- (void)JQPopSelectMenuViewDidShow:(UITableView *)tableView view:(JQPopSelectMenuView *)view DEPRECATED_MSG_ATTRIBUTE();     // 当下拉菜单已经显示时调用
+- (void)JQPopSelectMenuViewWillHidden:(UITableView *)tableView view:(JQPopSelectMenuView *)view DEPRECATED_MSG_ATTRIBUTE();  // 当下拉菜单将要收起时调用
+- (void)JQPopSelectMenuViewDidHidden:(UITableView *)tableView view:(JQPopSelectMenuView *)view DEPRECATED_MSG_ATTRIBUTE();   // 当下拉菜单已经收起时调用
 @end
 
 @interface JQPopSelectMenuView : UIView

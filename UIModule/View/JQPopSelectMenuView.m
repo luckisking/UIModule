@@ -198,9 +198,9 @@ typedef NS_ENUM(NSUInteger, JQSelectMenumViewMode) {
               break;
         }
     }
-    if ([self.delegate respondsToSelector:@selector(JQPopSelectMenuViewWillShow:view:)]) {
-        [self.delegate JQPopSelectMenuViewWillShow:_tableView view:self];
-    }
+//    if ([self.delegate respondsToSelector:@selector(JQPopSelectMenuViewWillShow:view:)]) {
+//        [self.delegate JQPopSelectMenuViewWillShow:_tableView view:self];
+//    }
     [UIView animateWithDuration:_animationTime animations:^{
         if (self.showMode==JQSelectMenumModeNormal) {
             CGRect frame  =  self.tableView.frame;
@@ -211,9 +211,9 @@ typedef NS_ENUM(NSUInteger, JQSelectMenumViewMode) {
         }
       
     } completion:^(BOOL finished) {
-        if ([self.delegate respondsToSelector:@selector(JQPopSelectMenuViewDidShow:view:)]) {
-            [self.delegate JQPopSelectMenuViewDidShow:self.tableView view:self];
-        }
+//        if ([self.delegate respondsToSelector:@selector(JQPopSelectMenuViewDidShow:view:)]) {
+//            [self.delegate JQPopSelectMenuViewDidShow:self.tableView view:self];
+//        }
     }];
 }
 
@@ -223,9 +223,9 @@ typedef NS_ENUM(NSUInteger, JQSelectMenumViewMode) {
         _tableView = nil;
         return;
     }
-    if ([self.delegate respondsToSelector:@selector(JQPopSelectMenuViewWillHidden:view:)]) {
-        [self.delegate JQPopSelectMenuViewWillHidden:_tableView view:self];
-    }
+//    if ([self.delegate respondsToSelector:@selector(JQPopSelectMenuViewWillHidden:view:)]) {
+//        [self.delegate JQPopSelectMenuViewWillHidden:_tableView view:self];
+//    }
     [UIView animateWithDuration:0.2 animations:^{
 
         if (self.HideNeedMode) {
@@ -244,9 +244,9 @@ typedef NS_ENUM(NSUInteger, JQSelectMenumViewMode) {
             }
         }
     } completion:^(BOOL finished) {
-        if ([self.delegate respondsToSelector:@selector(JQPopSelectMenuViewDidHidden:view:)]) {
-            [self.delegate JQPopSelectMenuViewDidHidden:self.tableView view:self];
-        }
+//        if ([self.delegate respondsToSelector:@selector(JQPopSelectMenuViewDidHidden:view:)]) {
+//            [self.delegate JQPopSelectMenuViewDidHidden:self.tableView view:self];
+//        }
         [self.tableView removeFromSuperview];
         if (self.viewMode == ViewModePop) {
             [self removeFromSuperview];

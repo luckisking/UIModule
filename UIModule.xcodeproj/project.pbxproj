@@ -8,6 +8,30 @@
 
 /* Begin PBXBuildFile section */
 		7ABB936386FE080817DD4210 /* libPods-UIModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20DB6950829D683C9F4368AC /* libPods-UIModule.a */; };
+		C816E2D82302994E00FE8DB0 /* DXLiveAppraiseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2A02302994E00FE8DB0 /* DXLiveAppraiseViewController.m */; };
+		C816E2D92302994E00FE8DB0 /* DXLiveAppraiseSuccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2A32302994E00FE8DB0 /* DXLiveAppraiseSuccessViewController.m */; };
+		C816E2DA2302994E00FE8DB0 /* DXLivePlayBackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2A62302994E00FE8DB0 /* DXLivePlayBackViewController.m */; };
+		C816E2DB2302994E00FE8DB0 /* DXLiveViewController+Gensee.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2A82302994E00FE8DB0 /* DXLiveViewController+Gensee.m */; };
+		C816E2DC2302994E00FE8DB0 /* DXLiveViewController+CC.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2A92302994E00FE8DB0 /* DXLiveViewController+CC.m */; };
+		C816E2DD2302994E00FE8DB0 /* DXLiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2AA2302994E00FE8DB0 /* DXLiveViewController.m */; };
+		C816E2DE2302994E00FE8DB0 /* ChatMessageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2AF2302994E00FE8DB0 /* ChatMessageInfo.m */; };
+		C816E2DF2302994E00FE8DB0 /* DXLiveModuleNoteModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2B02302994E00FE8DB0 /* DXLiveModuleNoteModel.m */; };
+		C816E2E02302994E00FE8DB0 /* DXLiveKeyboardView.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2BA2302994E00FE8DB0 /* DXLiveKeyboardView.m */; };
+		C816E2E12302994E00FE8DB0 /* DXLiveConnectShieldView.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2BD2302994E00FE8DB0 /* DXLiveConnectShieldView.m */; };
+		C816E2E22302994E00FE8DB0 /* DXLiveNoteKeyboardView.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2BE2302994E00FE8DB0 /* DXLiveNoteKeyboardView.m */; };
+		C816E2E32302994E00FE8DB0 /* DXLiveInteractionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2BF2302994E00FE8DB0 /* DXLiveInteractionView.m */; };
+		C816E2E42302994E00FE8DB0 /* DXLiveSubTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2C02302994E00FE8DB0 /* DXLiveSubTableViewCell.m */; };
+		C816E2E52302994E00FE8DB0 /* DXLiveShieldView.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2C22302994E00FE8DB0 /* DXLiveShieldView.m */; };
+		C816E2E62302994E00FE8DB0 /* DXLiveOverLayerVeiw.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2C32302994E00FE8DB0 /* DXLiveOverLayerVeiw.m */; };
+		C816E2E72302994E00FE8DB0 /* DXLiveInvestigationResultsView.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2C52302994E00FE8DB0 /* DXLiveInvestigationResultsView.m */; };
+		C816E2E82302994E00FE8DB0 /* DXLiveNetworkCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2C62302994E00FE8DB0 /* DXLiveNetworkCell.m */; };
+		C816E2E92302994E00FE8DB0 /* DXLiveNetworkView.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2C72302994E00FE8DB0 /* DXLiveNetworkView.m */; };
+		C816E2EA2302994E00FE8DB0 /* DXLiveInvestigationResultsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2C82302994E00FE8DB0 /* DXLiveInvestigationResultsCell.m */; };
+		C816E2EB2302994E00FE8DB0 /* DXLiveInvestigationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2CA2302994E00FE8DB0 /* DXLiveInvestigationCell.m */; };
+		C816E2EC2302994E00FE8DB0 /* DXLiveInvestigationView.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2CB2302994E00FE8DB0 /* DXLiveInvestigationView.m */; };
+		C816E2ED2302994E00FE8DB0 /* DXLiveEnteringInvestigationView.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2CE2302994E00FE8DB0 /* DXLiveEnteringInvestigationView.m */; };
+		C816E2EE2302994E00FE8DB0 /* DXLiveApiNetWork.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2D42302994E00FE8DB0 /* DXLiveApiNetWork.m */; };
+		C816E2EF2302994E00FE8DB0 /* DXLiveRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = C816E2D72302994E00FE8DB0 /* DXLiveRequest.m */; };
 		C89D71F722E7EBA70048A1BD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D71F622E7EBA70048A1BD /* AppDelegate.m */; };
 		C89D71FA22E7EBA70048A1BD /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C89D71F922E7EBA70048A1BD /* ViewController.m */; };
 		C89D71FD22E7EBA70048A1BD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C89D71FB22E7EBA70048A1BD /* Main.storyboard */; };
@@ -20,6 +44,54 @@
 /* Begin PBXFileReference section */
 		20DB6950829D683C9F4368AC /* libPods-UIModule.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-UIModule.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AEDFEA781850A4660E756C3 /* Pods-UIModule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UIModule.debug.xcconfig"; path = "Target Support Files/Pods-UIModule/Pods-UIModule.debug.xcconfig"; sourceTree = "<group>"; };
+		C816E2A02302994E00FE8DB0 /* DXLiveAppraiseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveAppraiseViewController.m; sourceTree = "<group>"; };
+		C816E2A12302994E00FE8DB0 /* DXLiveAppraiseSuccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveAppraiseSuccessViewController.h; sourceTree = "<group>"; };
+		C816E2A22302994E00FE8DB0 /* DXLiveAppraiseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveAppraiseViewController.h; sourceTree = "<group>"; };
+		C816E2A32302994E00FE8DB0 /* DXLiveAppraiseSuccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveAppraiseSuccessViewController.m; sourceTree = "<group>"; };
+		C816E2A52302994E00FE8DB0 /* DXLivePlayBackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLivePlayBackViewController.h; sourceTree = "<group>"; };
+		C816E2A62302994E00FE8DB0 /* DXLivePlayBackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLivePlayBackViewController.m; sourceTree = "<group>"; };
+		C816E2A82302994E00FE8DB0 /* DXLiveViewController+Gensee.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DXLiveViewController+Gensee.m"; sourceTree = "<group>"; };
+		C816E2A92302994E00FE8DB0 /* DXLiveViewController+CC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DXLiveViewController+CC.m"; sourceTree = "<group>"; };
+		C816E2AA2302994E00FE8DB0 /* DXLiveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveViewController.m; sourceTree = "<group>"; };
+		C816E2AB2302994E00FE8DB0 /* DXLiveViewController+CC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DXLiveViewController+CC.h"; sourceTree = "<group>"; };
+		C816E2AC2302994E00FE8DB0 /* DXLiveViewController+Gensee.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DXLiveViewController+Gensee.h"; sourceTree = "<group>"; };
+		C816E2AD2302994E00FE8DB0 /* DXLiveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveViewController.h; sourceTree = "<group>"; };
+		C816E2AF2302994E00FE8DB0 /* ChatMessageInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatMessageInfo.m; sourceTree = "<group>"; };
+		C816E2B02302994E00FE8DB0 /* DXLiveModuleNoteModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveModuleNoteModel.m; sourceTree = "<group>"; };
+		C816E2B12302994E00FE8DB0 /* ChatMessageInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatMessageInfo.h; sourceTree = "<group>"; };
+		C816E2B22302994E00FE8DB0 /* DXLiveModuleNoteModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveModuleNoteModel.h; sourceTree = "<group>"; };
+		C816E2B62302994E00FE8DB0 /* DXLiveSubTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveSubTableViewCell.h; sourceTree = "<group>"; };
+		C816E2B72302994E00FE8DB0 /* DXLiveInteractionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveInteractionView.h; sourceTree = "<group>"; };
+		C816E2B82302994E00FE8DB0 /* DXLiveNoteKeyboardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveNoteKeyboardView.h; sourceTree = "<group>"; };
+		C816E2B92302994E00FE8DB0 /* DXLiveConnectShieldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveConnectShieldView.h; sourceTree = "<group>"; };
+		C816E2BA2302994E00FE8DB0 /* DXLiveKeyboardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveKeyboardView.m; sourceTree = "<group>"; };
+		C816E2BB2302994E00FE8DB0 /* DXLiveOverLayerVeiw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveOverLayerVeiw.h; sourceTree = "<group>"; };
+		C816E2BC2302994E00FE8DB0 /* DXLiveShieldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveShieldView.h; sourceTree = "<group>"; };
+		C816E2BD2302994E00FE8DB0 /* DXLiveConnectShieldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveConnectShieldView.m; sourceTree = "<group>"; };
+		C816E2BE2302994E00FE8DB0 /* DXLiveNoteKeyboardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveNoteKeyboardView.m; sourceTree = "<group>"; };
+		C816E2BF2302994E00FE8DB0 /* DXLiveInteractionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveInteractionView.m; sourceTree = "<group>"; };
+		C816E2C02302994E00FE8DB0 /* DXLiveSubTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveSubTableViewCell.m; sourceTree = "<group>"; };
+		C816E2C12302994E00FE8DB0 /* DXLiveKeyboardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveKeyboardView.h; sourceTree = "<group>"; };
+		C816E2C22302994E00FE8DB0 /* DXLiveShieldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveShieldView.m; sourceTree = "<group>"; };
+		C816E2C32302994E00FE8DB0 /* DXLiveOverLayerVeiw.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveOverLayerVeiw.m; sourceTree = "<group>"; };
+		C816E2C52302994E00FE8DB0 /* DXLiveInvestigationResultsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveInvestigationResultsView.m; sourceTree = "<group>"; };
+		C816E2C62302994E00FE8DB0 /* DXLiveNetworkCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveNetworkCell.m; sourceTree = "<group>"; };
+		C816E2C72302994E00FE8DB0 /* DXLiveNetworkView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveNetworkView.m; sourceTree = "<group>"; };
+		C816E2C82302994E00FE8DB0 /* DXLiveInvestigationResultsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveInvestigationResultsCell.m; sourceTree = "<group>"; };
+		C816E2C92302994E00FE8DB0 /* DXLiveEnteringInvestigationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveEnteringInvestigationView.h; sourceTree = "<group>"; };
+		C816E2CA2302994E00FE8DB0 /* DXLiveInvestigationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveInvestigationCell.m; sourceTree = "<group>"; };
+		C816E2CB2302994E00FE8DB0 /* DXLiveInvestigationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveInvestigationView.m; sourceTree = "<group>"; };
+		C816E2CC2302994E00FE8DB0 /* DXLiveNetworkCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveNetworkCell.h; sourceTree = "<group>"; };
+		C816E2CD2302994E00FE8DB0 /* DXLiveInvestigationResultsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveInvestigationResultsView.h; sourceTree = "<group>"; };
+		C816E2CE2302994E00FE8DB0 /* DXLiveEnteringInvestigationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveEnteringInvestigationView.m; sourceTree = "<group>"; };
+		C816E2CF2302994E00FE8DB0 /* DXLiveInvestigationResultsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveInvestigationResultsCell.h; sourceTree = "<group>"; };
+		C816E2D02302994E00FE8DB0 /* DXLiveNetworkView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveNetworkView.h; sourceTree = "<group>"; };
+		C816E2D12302994E00FE8DB0 /* DXLiveInvestigationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveInvestigationCell.h; sourceTree = "<group>"; };
+		C816E2D22302994E00FE8DB0 /* DXLiveInvestigationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveInvestigationView.h; sourceTree = "<group>"; };
+		C816E2D42302994E00FE8DB0 /* DXLiveApiNetWork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveApiNetWork.m; sourceTree = "<group>"; };
+		C816E2D52302994E00FE8DB0 /* DXLiveRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveRequest.h; sourceTree = "<group>"; };
+		C816E2D62302994E00FE8DB0 /* DXLiveApiNetWork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXLiveApiNetWork.h; sourceTree = "<group>"; };
+		C816E2D72302994E00FE8DB0 /* DXLiveRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DXLiveRequest.m; sourceTree = "<group>"; };
 		C89D71F222E7EBA70048A1BD /* UIModule.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UIModule.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C89D71F522E7EBA70048A1BD /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C89D71F622E7EBA70048A1BD /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -55,6 +127,141 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		C816E29D2302994E00FE8DB0 /* Live */ = {
+			isa = PBXGroup;
+			children = (
+				C816E29E2302994E00FE8DB0 /* Controller */,
+				C816E2AE2302994E00FE8DB0 /* Model */,
+				C816E2B32302994E00FE8DB0 /* View */,
+				C816E2D32302994E00FE8DB0 /* Api */,
+			);
+			path = Live;
+			sourceTree = "<group>";
+		};
+		C816E29E2302994E00FE8DB0 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				C816E29F2302994E00FE8DB0 /* Other */,
+				C816E2A42302994E00FE8DB0 /* Playback */,
+				C816E2A72302994E00FE8DB0 /* Live */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		C816E29F2302994E00FE8DB0 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				C816E2A02302994E00FE8DB0 /* DXLiveAppraiseViewController.m */,
+				C816E2A12302994E00FE8DB0 /* DXLiveAppraiseSuccessViewController.h */,
+				C816E2A22302994E00FE8DB0 /* DXLiveAppraiseViewController.h */,
+				C816E2A32302994E00FE8DB0 /* DXLiveAppraiseSuccessViewController.m */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
+		C816E2A42302994E00FE8DB0 /* Playback */ = {
+			isa = PBXGroup;
+			children = (
+				C816E2A52302994E00FE8DB0 /* DXLivePlayBackViewController.h */,
+				C816E2A62302994E00FE8DB0 /* DXLivePlayBackViewController.m */,
+			);
+			path = Playback;
+			sourceTree = "<group>";
+		};
+		C816E2A72302994E00FE8DB0 /* Live */ = {
+			isa = PBXGroup;
+			children = (
+				C816E2A82302994E00FE8DB0 /* DXLiveViewController+Gensee.m */,
+				C816E2A92302994E00FE8DB0 /* DXLiveViewController+CC.m */,
+				C816E2AA2302994E00FE8DB0 /* DXLiveViewController.m */,
+				C816E2AB2302994E00FE8DB0 /* DXLiveViewController+CC.h */,
+				C816E2AC2302994E00FE8DB0 /* DXLiveViewController+Gensee.h */,
+				C816E2AD2302994E00FE8DB0 /* DXLiveViewController.h */,
+			);
+			path = Live;
+			sourceTree = "<group>";
+		};
+		C816E2AE2302994E00FE8DB0 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C816E2AF2302994E00FE8DB0 /* ChatMessageInfo.m */,
+				C816E2B02302994E00FE8DB0 /* DXLiveModuleNoteModel.m */,
+				C816E2B12302994E00FE8DB0 /* ChatMessageInfo.h */,
+				C816E2B22302994E00FE8DB0 /* DXLiveModuleNoteModel.h */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		C816E2B32302994E00FE8DB0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				C816E2B42302994E00FE8DB0 /* CCView */,
+				C816E2B52302994E00FE8DB0 /* CommonView */,
+				C816E2C42302994E00FE8DB0 /* GenseeView */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		C816E2B42302994E00FE8DB0 /* CCView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CCView;
+			sourceTree = "<group>";
+		};
+		C816E2B52302994E00FE8DB0 /* CommonView */ = {
+			isa = PBXGroup;
+			children = (
+				C816E2B62302994E00FE8DB0 /* DXLiveSubTableViewCell.h */,
+				C816E2B72302994E00FE8DB0 /* DXLiveInteractionView.h */,
+				C816E2B82302994E00FE8DB0 /* DXLiveNoteKeyboardView.h */,
+				C816E2B92302994E00FE8DB0 /* DXLiveConnectShieldView.h */,
+				C816E2BA2302994E00FE8DB0 /* DXLiveKeyboardView.m */,
+				C816E2BB2302994E00FE8DB0 /* DXLiveOverLayerVeiw.h */,
+				C816E2BC2302994E00FE8DB0 /* DXLiveShieldView.h */,
+				C816E2BD2302994E00FE8DB0 /* DXLiveConnectShieldView.m */,
+				C816E2BE2302994E00FE8DB0 /* DXLiveNoteKeyboardView.m */,
+				C816E2BF2302994E00FE8DB0 /* DXLiveInteractionView.m */,
+				C816E2C02302994E00FE8DB0 /* DXLiveSubTableViewCell.m */,
+				C816E2C12302994E00FE8DB0 /* DXLiveKeyboardView.h */,
+				C816E2C22302994E00FE8DB0 /* DXLiveShieldView.m */,
+				C816E2C32302994E00FE8DB0 /* DXLiveOverLayerVeiw.m */,
+			);
+			path = CommonView;
+			sourceTree = "<group>";
+		};
+		C816E2C42302994E00FE8DB0 /* GenseeView */ = {
+			isa = PBXGroup;
+			children = (
+				C816E2C52302994E00FE8DB0 /* DXLiveInvestigationResultsView.m */,
+				C816E2C62302994E00FE8DB0 /* DXLiveNetworkCell.m */,
+				C816E2C72302994E00FE8DB0 /* DXLiveNetworkView.m */,
+				C816E2C82302994E00FE8DB0 /* DXLiveInvestigationResultsCell.m */,
+				C816E2C92302994E00FE8DB0 /* DXLiveEnteringInvestigationView.h */,
+				C816E2CA2302994E00FE8DB0 /* DXLiveInvestigationCell.m */,
+				C816E2CB2302994E00FE8DB0 /* DXLiveInvestigationView.m */,
+				C816E2CC2302994E00FE8DB0 /* DXLiveNetworkCell.h */,
+				C816E2CD2302994E00FE8DB0 /* DXLiveInvestigationResultsView.h */,
+				C816E2CE2302994E00FE8DB0 /* DXLiveEnteringInvestigationView.m */,
+				C816E2CF2302994E00FE8DB0 /* DXLiveInvestigationResultsCell.h */,
+				C816E2D02302994E00FE8DB0 /* DXLiveNetworkView.h */,
+				C816E2D12302994E00FE8DB0 /* DXLiveInvestigationCell.h */,
+				C816E2D22302994E00FE8DB0 /* DXLiveInvestigationView.h */,
+			);
+			path = GenseeView;
+			sourceTree = "<group>";
+		};
+		C816E2D32302994E00FE8DB0 /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				C816E2D42302994E00FE8DB0 /* DXLiveApiNetWork.m */,
+				C816E2D52302994E00FE8DB0 /* DXLiveRequest.h */,
+				C816E2D62302994E00FE8DB0 /* DXLiveApiNetWork.h */,
+				C816E2D72302994E00FE8DB0 /* DXLiveRequest.m */,
+			);
+			path = Api;
+			sourceTree = "<group>";
+		};
 		C89D71E922E7EBA70048A1BD = {
 			isa = PBXGroup;
 			children = (
@@ -76,6 +283,7 @@
 		C89D71F422E7EBA70048A1BD /* UIModule */ = {
 			isa = PBXGroup;
 			children = (
+				C816E29D2302994E00FE8DB0 /* Live */,
 				C89D738D22E83D810048A1BD /* View */,
 				C89D71F522E7EBA70048A1BD /* AppDelegate.h */,
 				C89D71F622E7EBA70048A1BD /* AppDelegate.m */,
@@ -279,9 +487,33 @@
 			buildActionMask = 2147483647;
 			files = (
 				C89D71FA22E7EBA70048A1BD /* ViewController.m in Sources */,
+				C816E2EC2302994E00FE8DB0 /* DXLiveInvestigationView.m in Sources */,
+				C816E2EA2302994E00FE8DB0 /* DXLiveInvestigationResultsCell.m in Sources */,
+				C816E2E62302994E00FE8DB0 /* DXLiveOverLayerVeiw.m in Sources */,
+				C816E2E82302994E00FE8DB0 /* DXLiveNetworkCell.m in Sources */,
+				C816E2EB2302994E00FE8DB0 /* DXLiveInvestigationCell.m in Sources */,
+				C816E2D82302994E00FE8DB0 /* DXLiveAppraiseViewController.m in Sources */,
+				C816E2DD2302994E00FE8DB0 /* DXLiveViewController.m in Sources */,
+				C816E2E72302994E00FE8DB0 /* DXLiveInvestigationResultsView.m in Sources */,
+				C816E2EE2302994E00FE8DB0 /* DXLiveApiNetWork.m in Sources */,
 				C89D720522E7EBA80048A1BD /* main.m in Sources */,
+				C816E2E02302994E00FE8DB0 /* DXLiveKeyboardView.m in Sources */,
+				C816E2E42302994E00FE8DB0 /* DXLiveSubTableViewCell.m in Sources */,
+				C816E2E92302994E00FE8DB0 /* DXLiveNetworkView.m in Sources */,
+				C816E2D92302994E00FE8DB0 /* DXLiveAppraiseSuccessViewController.m in Sources */,
+				C816E2E22302994E00FE8DB0 /* DXLiveNoteKeyboardView.m in Sources */,
 				C89D739022E83D8E0048A1BD /* JQPopSelectMenuView.m in Sources */,
+				C816E2DE2302994E00FE8DB0 /* ChatMessageInfo.m in Sources */,
+				C816E2E32302994E00FE8DB0 /* DXLiveInteractionView.m in Sources */,
+				C816E2EF2302994E00FE8DB0 /* DXLiveRequest.m in Sources */,
+				C816E2DF2302994E00FE8DB0 /* DXLiveModuleNoteModel.m in Sources */,
+				C816E2DB2302994E00FE8DB0 /* DXLiveViewController+Gensee.m in Sources */,
+				C816E2E12302994E00FE8DB0 /* DXLiveConnectShieldView.m in Sources */,
+				C816E2DC2302994E00FE8DB0 /* DXLiveViewController+CC.m in Sources */,
+				C816E2E52302994E00FE8DB0 /* DXLiveShieldView.m in Sources */,
+				C816E2DA2302994E00FE8DB0 /* DXLivePlayBackViewController.m in Sources */,
 				C89D71F722E7EBA70048A1BD /* AppDelegate.m in Sources */,
+				C816E2ED2302994E00FE8DB0 /* DXLiveEnteringInvestigationView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,12 +657,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9R4J288K8L;
 				INFOPLIST_FILE = UIModule/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "---.UIModule";
+				PRODUCT_BUNDLE_IDENTIFIER = "---.UIModulezl-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -442,12 +676,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9R4J288K8L;
 				INFOPLIST_FILE = UIModule/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "---.UIModule";
+				PRODUCT_BUNDLE_IDENTIFIER = "---.UIModulezl-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
