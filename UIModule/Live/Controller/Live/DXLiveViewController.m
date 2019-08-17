@@ -9,7 +9,6 @@
 #import "DXLiveViewController.h"
 #import "DXLiveConnectShieldView.h"     //进来时候的欢迎界面
 #import "DXLiveShieldView.h"            //离开时候的原因界面
-#import "DXLiveNetworkView.h"           //选择网络界面（只有gensee 有这个选择）
 #import "DXLiveOverLayerVeiw.h"  //大的播放视频操作层
 #import "DXLiveRequest.h"       //网络请求
 #import <SPPageMenu/SPPageMenu.h>
@@ -25,7 +24,7 @@
 //#import "NSAttributedString+Attributes.h"
 //#import "SCGIFImageView.h"
 
-@interface DXLiveViewController ()  <UITextViewDelegate,UIGestureRecognizerDelegate, liveShieldViewDelegate,liveNoteKeyboardViewDelegate, LiveNetworkViewDelegate,DXLiveOverLayerVeiwDelegate,DXLiveViewControllerDelegate,SPPageMenuDelegate>
+@interface DXLiveViewController ()  <UITextViewDelegate,UIScrollViewDelegate,SPPageMenuDelegate,liveShieldViewDelegate,liveNoteKeyboardViewDelegate, LiveNetworkViewDelegate,DXLiveOverLayerVeiwDelegate,DXLiveViewControllerDelegate>
 
 #pragma mark 修改切换（视频与文档）和（全屏与非全屏）的实现方式
 @property (strong, nonatomic) DXLiveOverLayerVeiw *overlayView;                  //播放操作视图
@@ -37,7 +36,6 @@
 @property(nonatomic, strong)UIView *bootomSafeView;//iphoneX底部
 @property (nonatomic, strong) DXLiveConnectShieldView *connectShieldView;// 进入直播间时弹出的视图
 @property (nonatomic, strong) DXLiveShieldView *shieldView;              // 关闭直播时弹出的视图
-@property (nonatomic, strong) DXLiveNetworkView *networkView;            // 点击网络弹出视图（只有gensee有这个视图 cc的没有）
 @property (nonatomic, assign) CGFloat keyboardHeight;                    // 键盘高度
 @property (nonatomic, assign) NSInteger toIndex; //由于SPPageMenu，全屏返回之后调整了scrollViewde contenSize，导致显示bug，借这个属性更正
 @end
@@ -57,7 +55,6 @@
     [self.view bringSubviewToFront:_connectShieldView];
     [_interfaceView setupDataScrollPositionBottom];
     
-//    [self.navigationController.navigationBar setBarStyle:UIBarStyleBlack];
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
@@ -70,9 +67,7 @@
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
 }
-//- (UIStatusBarStyle)preferredStatusBarStyle {
-//    return UIStatusBarStyleLightContent;
-//}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -86,7 +81,6 @@
     _request = [[DXLiveRequest alloc] init];
     [self getCommentData]; //查询是否评价过该课程
 
-    
     [self initParentPlayLargerWindow];  //直播大父视图
     [self initParentPlaySmallWindow]; //直播小父视图
     
@@ -115,6 +109,7 @@
     }];
     
     _parentPlayLargerWindow = [[UIView alloc] init];
+    _parentPlayLargerWindow.backgroundColor  = [UIColor blackColor];
     [self.view addSubview:_parentPlayLargerWindow];
     [_parentPlayLargerWindow mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
@@ -127,24 +122,23 @@
     _overlayView = [[DXLiveOverLayerVeiw alloc] initWithTarget:self];
     _overlayView.titleLabel.text = _videoTitle;
     [_parentPlayLargerWindow addSubview:_overlayView];
+//    _overlayView.layer.zPosition = 100000;//不响应
     [_overlayView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0,0,0));
     }];
-    if (_liveType) {
-        _overlayView.networkButton.hidden = YES;//只有gensee有网络选择
-    }
     [_overlayView addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSignelLargerTap:)]];
     
 }
 /**初始化小的播放视图 */
 - (void)initParentPlaySmallWindow {
     _parentPlaySmallWindow = [[UIView alloc] init];
+    _parentPlaySmallWindow.backgroundColor  = [UIColor blackColor];
     [self.view addSubview:_parentPlaySmallWindow];
     [_parentPlaySmallWindow mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.parentPlayLargerWindow.mas_bottom).offset(50);
         make.right.mas_equalTo(self.view.mas_right);
         make.width.mas_equalTo(144);
-        make.height.mas_equalTo(144*3.0/4);
+        make.height.mas_equalTo(144*9.0/16); //cc不支持3.0/4的比例，gensee支持,这里使用通用的9/16
     }];
     [self.view layoutIfNeeded];
     //关闭
@@ -190,10 +184,16 @@
     if ([sender.object boolValue]) {
         // 直播初始化成功，加入直播
     }else {
-        [self showHint:@"加入直播失败"];
+        [self showHint:@"视频、文档加载失败"];
     }
     [self.connectShieldView removeFromSuperview];
-    [self.parentPlayLargerWindow bringSubviewToFront:_overlayView];
+ 
+    if (_liveType) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            //由于cc直播初始化视图的耗时较长，可能数据已经开始返回，视图还没有初始化完成(还没有添加到父视图上)..
+            [self.parentPlayLargerWindow bringSubviewToFront:self.overlayView];
+        });
+    }
 }
 
 #pragma mark - SPPageMenu的代理方法
@@ -525,7 +525,7 @@
         /*由于是textView 没有textField的-textFieldShouldReturn代理方法，所有在这里监听return键*/
         if ([text isEqualToString:@"\n"]){ //判断输入的字是否是回车，即按下return
             //在这里做你响应return键的代码
-            [self sendMessage:textView.text];
+            [self sendChatMessage:textView.text];
 
             textView.text = @"";
             [textView resignFirstResponder];
@@ -536,8 +536,12 @@
 }
 
 #pragma mark -- 发送消息
-- (void)sendMessage:(NSString *)content {
-    NSLog(@"本方法将在类别中改写");
+- (void)sendChatMessage:(NSString *)content {
+    if (_liveType) {
+        [self sendCCMessage:content];
+    }else {
+        [self sendGenseeMessage:content];
+    }
 }
 
 #pragma mark - 手势点击
@@ -549,8 +553,8 @@
     self.smallVideoBackButton.frame = CGRectMake(0, 0, 30, 30);
     self.smallVideoBackButton.hidden = YES;
     self.smallVideoBackButton.imageEdgeInsets = UIEdgeInsetsMake(3, 3, 0, 0);
-    [self.smallVideoBackButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    self.smallVideoBackButton.tag = 67;
+//    [self.smallVideoBackButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+//    self.smallVideoBackButton.tag = 67;
     [self.smallVideoBackButton addTarget:self action:@selector(smallVideoButtonAction) forControlEvents:UIControlEventTouchUpInside];
 }
 //小视频关闭按钮点击方法
@@ -646,11 +650,18 @@
 // 网络按钮方法
 - (void)networkButtonAction:(UIButton *)button
 {
-    if (self.networkArray != nil) {
-        [self.view addSubview:self.networkView];
-    }else{
-        [self showHint:@"没有可更换网络"];
+    if (_liveType) {
+        //cc切换
+        [_overlayView selectLinesWithFirRoad:_firRoadNum secRoadKeyArray:_secRoadKeyArray];
+    }else {
+        //gensee切换网络
+        if (self.networkArray != nil) {
+            [self.view addSubview:self.networkView];
+        }else{
+            [self showHint:@"没有可更换网络"];
+        }
     }
+   
 }
 
 // 切换按钮方法
@@ -665,27 +676,62 @@
     [self.liveKeyboardView.KeyboardTextView resignFirstResponder];
     
     if (_parentPlaySmallWindow.hidden) {
+        //显示隐藏小视图
         _parentPlaySmallWindow.hidden = NO;
-        if ([_videoView.superview isEqual:_parentPlaySmallWindow]) {
-              [self.overlayView.cutButton setImage:IMG(@"live_video") forState:UIControlStateNormal];
+        if (_liveType) {
+            //cc
+            if (![self.overlayView.cutButton.accessibilityIdentifier isEqualToString:@"视频"]) {
+                [self.overlayView.cutButton setImage:IMG(@"live_video") forState:UIControlStateNormal];
+            }else {
+                [self.overlayView.cutButton setImage:IMG(@"live_doc") forState:UIControlStateNormal];
+            }
         }else {
-              [self.overlayView.cutButton setImage:IMG(@"live_doc") forState:UIControlStateNormal];
+            //gensee
+            if ([_videoView.superview isEqual:_parentPlaySmallWindow]) {
+                [self.overlayView.cutButton setImage:IMG(@"live_video") forState:UIControlStateNormal];
+            }else {
+                [self.overlayView.cutButton setImage:IMG(@"live_doc") forState:UIControlStateNormal];
+            }
         }
+        
     }else{
-        if ([_videoView.superview isEqual:_parentPlaySmallWindow]) {
-            [_parentPlayLargerWindow addSubview:_videoView];
-            [_parentPlaySmallWindow addSubview:_docView];
-            _videoView.frame = _parentPlayLargerWindow.bounds;
-            _docView.frame = _parentPlaySmallWindow.bounds;
-             [self.overlayView.cutButton setImage:IMG(@"live_doc") forState:UIControlStateNormal];
+        if (_liveType) {
+            //cc直播
+            if ( [self.overlayView.cutButton.accessibilityIdentifier isEqualToString:@"视频"]) {
+                [_requestData changeDocParent:_parentPlaySmallWindow];
+                [_requestData changePlayerParent:_parentPlayLargerWindow];
+                [_requestData changeDocFrame:_parentPlaySmallWindow.bounds];
+                [_requestData changePlayerFrame:_parentPlayLargerWindow.bounds];
+                [_overlayView.cutButton setImage:IMG(@"live_doc") forState:UIControlStateNormal];
+                _overlayView.cutButton.accessibilityIdentifier = @"文档";
+            }else {
+                [_requestData changeDocParent:_parentPlayLargerWindow];
+                [_requestData changePlayerParent:_parentPlaySmallWindow];
+                [_requestData changeDocFrame:_parentPlayLargerWindow.bounds];
+                [_requestData changePlayerFrame:_parentPlaySmallWindow.bounds];
+                [_overlayView.cutButton setImage:IMG(@"live_video") forState:UIControlStateNormal];
+                _overlayView.cutButton.accessibilityIdentifier = @"视频";
+            }
+            
         }else {
-            [_parentPlayLargerWindow addSubview:_docView];
-            [_parentPlaySmallWindow addSubview:_videoView];
-            _docView.frame = _parentPlayLargerWindow.bounds;
-            _videoView.frame = _parentPlaySmallWindow.bounds;
-             [self.overlayView.cutButton setImage:IMG(@"live_video") forState:UIControlStateNormal];
+            //gensee直播
+            if ([_videoView.superview isEqual:_parentPlaySmallWindow]) {
+                [_parentPlayLargerWindow addSubview:_videoView];
+                [_parentPlaySmallWindow addSubview:_docView];
+                _videoView.frame = _parentPlayLargerWindow.bounds;
+                _docView.frame = _parentPlaySmallWindow.bounds;
+                [self.overlayView.cutButton setImage:IMG(@"live_doc") forState:UIControlStateNormal];
+            }else {
+                [_parentPlayLargerWindow addSubview:_docView];
+                [_parentPlaySmallWindow addSubview:_videoView];
+                _docView.frame = _parentPlayLargerWindow.bounds;
+                _videoView.frame = _parentPlaySmallWindow.bounds;
+                [self.overlayView.cutButton setImage:IMG(@"live_video") forState:UIControlStateNormal];
+            }
         }
+     
         [_parentPlayLargerWindow bringSubviewToFront:_overlayView];
+        [_parentPlaySmallWindow bringSubviewToFront:_smallVideoBackButton];
     }
 }
 
@@ -725,7 +771,7 @@
             make.top.mas_equalTo(self.parentPlayLargerWindow.mas_bottom).offset(50);
             make.right.mas_equalTo(self.view.mas_right);
             make.width.mas_equalTo(144);
-            make.height.mas_equalTo(144*3.0/4);
+            make.height.mas_equalTo(144*9.0/16);
         }];
         [_overlayView.headerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(60);
@@ -749,7 +795,7 @@
             make.bottom.mas_equalTo(self.view.mas_bottom).offset(iPhoneX?-70-34:-70);
             make.right.mas_equalTo(self.view.mas_right).offset(-10);
             make.width.mas_equalTo(144);
-            make.height.mas_equalTo(144*3.0/4);
+            make.height.mas_equalTo(144*9.0/16);
         }];
         [_overlayView.headerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(70);
@@ -778,12 +824,24 @@
     [self.view bringSubviewToFront:_parentPlayLargerWindow];
     [self.view bringSubviewToFront:_parentPlaySmallWindow];
     [self.view layoutIfNeeded];
-    if ([_docView.superview isEqual:_parentPlayLargerWindow]) {
-        _docView.frame = _parentPlayLargerWindow.bounds ;
-        _videoView.frame = _parentPlaySmallWindow.bounds ;
+    if (_liveType) {
+        //cc直播
+        if ([self.overlayView.cutButton.accessibilityIdentifier isEqualToString:@"视频"]) {
+            [_requestData changeDocFrame:_parentPlayLargerWindow.bounds];
+            [_requestData changePlayerFrame:_parentPlaySmallWindow.bounds];
+        }else {
+            [_requestData changeDocFrame:_parentPlaySmallWindow.bounds];
+            [_requestData changePlayerFrame:_parentPlayLargerWindow.bounds];
+        }
     }else {
-        _docView.frame = _parentPlaySmallWindow.bounds ;
-        _videoView.frame = _parentPlayLargerWindow.bounds ;
+        //gensee直播
+        if ([_docView.superview isEqual:_parentPlayLargerWindow]) {
+            _docView.frame = _parentPlayLargerWindow.bounds ;
+            _videoView.frame = _parentPlaySmallWindow.bounds ;
+        }else {
+            _docView.frame = _parentPlaySmallWindow.bounds ;
+            _videoView.frame = _parentPlayLargerWindow.bounds ;
+        }
     }
     [_interfaceView.scrollView setContentOffset:CGPointMake(IPHONE_WIDTH * _toIndex, 0) animated:NO];
 }
@@ -882,6 +940,8 @@
             [self.shieldView removeFromSuperview];
             break;
         case 60000:
+            [self.requestData requestCancel];
+            self.requestData = nil;
             [self.broadcastManager leaveAndShouldTerminateBroadcast:NO];
             [self.broadcastManager invalidate];
 //            [self.navigationController popViewControllerAnimated:YES];

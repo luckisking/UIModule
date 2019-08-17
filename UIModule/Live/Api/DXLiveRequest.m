@@ -107,6 +107,9 @@
             }else{
                 return NSOrderedAscending;}
         }];
+        if (!dataSource.count) {
+            state = NO;
+        }
         success((NSDictionary *)dataSource,state);
     } fail:^(NSError * _Nonnull error) {
         failure(error);

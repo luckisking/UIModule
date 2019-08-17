@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="DXPlayActionView">
+            <rect key="frame" x="0.0" y="0.0" width="80" height="60"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lsb-al-Jut" userLabel="confirmView">
+                    <rect key="frame" x="0.0" y="0.0" width="80" height="60"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gaH-po-F8Z">
+                            <rect key="frame" x="2" y="36" width="76" height="15"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="15" id="QEH-GZ-E8L"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SKFAction.png" translatesAutoresizingMaskIntoConstraints="NO" id="SWO-J7-M62">
+                            <rect key="frame" x="25" y="11" width="30" height="20"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="20" id="8vv-2G-R58"/>
+                                <constraint firstAttribute="width" constant="30" id="a7W-OQ-Idm"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="gaH-po-F8Z" secondAttribute="trailing" constant="2" id="42F-9b-mvH"/>
+                        <constraint firstItem="SWO-J7-M62" firstAttribute="top" secondItem="Lsb-al-Jut" secondAttribute="top" constant="11" id="CZf-94-EUs"/>
+                        <constraint firstItem="SWO-J7-M62" firstAttribute="centerX" secondItem="Lsb-al-Jut" secondAttribute="centerX" id="F6P-1r-nxh"/>
+                        <constraint firstItem="gaH-po-F8Z" firstAttribute="leading" secondItem="Lsb-al-Jut" secondAttribute="leading" constant="2" id="PZx-Dm-OvN"/>
+                        <constraint firstItem="gaH-po-F8Z" firstAttribute="top" secondItem="SWO-J7-M62" secondAttribute="bottom" constant="5" id="g20-FF-qfo"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="Lsb-al-Jut" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="EHP-jV-dKz"/>
+                <constraint firstAttribute="trailing" secondItem="Lsb-al-Jut" secondAttribute="trailing" id="L1m-H0-IAh"/>
+                <constraint firstItem="Lsb-al-Jut" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="LLJ-ts-Ye1"/>
+                <constraint firstAttribute="bottom" secondItem="Lsb-al-Jut" secondAttribute="bottom" id="pKA-Kc-qQJ"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="statueIMG" destination="SWO-J7-M62" id="SLB-ec-P9U"/>
+                <outlet property="timeLbl" destination="gaH-po-F8Z" id="P7O-3S-KoL"/>
+            </connections>
+            <point key="canvasLocation" x="-387.19999999999999" y="-692.65367316341838"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="SKFAction.png" width="30" height="20.5"/>
+    </resources>
+</document>

@@ -132,6 +132,7 @@
 
 
 #pragma mark - 尾部子视图
+//网络按钮
 - (void)loadNetworkButton {
     
     self.networkButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -169,6 +170,7 @@
 - (void)loadCutButton {
     self.cutButton = [[UIButton alloc] initWithFrame:CGRectZero];
     [self.cutButton setImage:IMG(@"live_video") forState:UIControlStateNormal];
+    self.cutButton.accessibilityIdentifier= @"视频" ;
     self.cutButton.backgroundColor = [UIColor clearColor];
     [self.cutButton addTarget:self action:@selector(cutButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -254,5 +256,142 @@
     if ([self.delegate respondsToSelector:@selector(videoOverLayerClickWithName: button:)]) {
         [self.delegate videoOverLayerClickWithName:name button:button] ;
     }
+}
+
+ #pragma mark  CC直播的时候的线路选择
+/**
+ 线路选择视图
+ 
+ @param firRoadNum 线路
+ @param secRoadKeyArray 清晰度
+ */
+- (void)selectLinesWithFirRoad:(NSInteger)firRoadNum secRoadKeyArray:(NSArray *)secRoadKeyArray {
+    
+    if (firRoadNum >3) {
+        firRoadNum = 3;
+    }
+    /*
+     ps:此处注释的代码为线路切换功能,默认隐藏了切换清晰度的btn(self.qingXiButton),如果想要打开线路切换功能，解开这个方法的注释,并且在- (void)layouUI:(BOOL)screenLandScape;方法中,将_qingXiButton.hidden = NO;
+     默认只有横屏状态下显示清晰度切换按钮.
+     */
+    NSArray *firRoadArr;
+    switch (firRoadNum) {
+        case 1:
+            firRoadArr = @[@"主线路",@"仅听音频"];
+            break;
+        case 2:
+            firRoadArr = @[@"主线路",@"备用线路1",@"仅听音频"];
+            break;
+        case 3:
+            firRoadArr = @[@"主线路",@"备用线路1",@"备用线路2",@"仅听音频"];
+            break;
+            
+        default:
+            break;
+    }
+    if (_bgView) {
+        _bgView.hidden = NO;
+        return;
+    }
+    _bgView = [[UIView alloc] init];
+    [self addSubview:_bgView];
+    _bgView.backgroundColor = RGBAColor(0, 0, 0, 0.5);
+    [_bgView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(removebgView:)]];
+    [_bgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0,0,0));
+    }];
+    //布局数组
+    NSMutableArray *xianluArr = [NSMutableArray array];
+    NSMutableArray *qingxiArr = [NSMutableArray array];
+    
+    //线路
+    UILabel * lineLabel = [[UILabel alloc] init];
+    lineLabel.text = @"线路:";
+    lineLabel.textColor = RGBHex(0xffffff) ;
+    lineLabel.font = [UIFont systemFontOfSize:FontSize_30];
+    [_bgView addSubview:lineLabel];
+    //清晰度
+    UILabel * clarityLabel = [[UILabel alloc] init];
+    clarityLabel.text = @"清晰度:";
+    clarityLabel.textColor = RGBHex(0xffffff);
+    clarityLabel.font = [UIFont systemFontOfSize:FontSize_30];
+    [_bgView addSubview:clarityLabel];
+
+    [xianluArr addObject:lineLabel];
+    [qingxiArr addObject:clarityLabel];
+    
+    for (int i = 0; i<= firRoadNum; i++) {
+        UIButton * btn = [[UIButton alloc] init];
+        [btn setTitle:firRoadArr[i] forState:UIControlStateNormal];
+        btn.titleLabel.textColor = [UIColor whiteColor];
+        btn.titleLabel.font = [UIFont systemFontOfSize:FontSize_30];
+        btn.tag = i+1000;
+        [_bgView addSubview:btn];
+        btn.layer.borderColor = RGBHex(0xf89e0f).CGColor;
+        btn.layer.cornerRadius = CCGetRealFromPt(25);
+        [btn layoutIfNeeded];
+        if (btn.tag == 1000) {
+            _secRoadButton = btn;
+            btn.layer.borderWidth = 1.0f;
+            [btn setTitleColor:RGBHex(0xf89e0f) forState:UIControlStateNormal];
+        }
+        [btn addTarget:self action:@selector(firRoadBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        [xianluArr addObject:btn];
+    }
+    for (int i = 0; i < secRoadKeyArray.count; i++) {
+        UIButton * btn = [[UIButton alloc] init];
+        [btn setTitle:secRoadKeyArray[i] forState:UIControlStateNormal];
+        btn.titleLabel.textColor = [UIColor whiteColor];
+        btn.titleLabel.font = [UIFont systemFontOfSize:FontSize_30];
+        btn.tag = i+2000;
+        [_bgView addSubview:btn];
+        btn.layer.borderColor = RGBHex(0xf89e0f).CGColor;
+        btn.layer.cornerRadius = CCGetRealFromPt(25);
+        [btn layoutIfNeeded];
+        if (btn.tag == 2000) {
+            _qingxiButton = btn;
+            btn.layer.borderWidth = 1.0f;
+            [btn setTitleColor:RGBHex(0xf89e0f) forState:UIControlStateNormal];
+        }
+        [btn addTarget:self action:@selector(qingxituBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        [qingxiArr addObject:btn];
+    }
+    //等间距离布局
+    [xianluArr mas_distributeViewsAlongAxis:MASAxisTypeHorizontal withFixedSpacing:10 leadSpacing:10 tailSpacing:10];
+    [xianluArr mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.bgView.mas_top).offset(80);
+        make.height.mas_equalTo(36);
+    }];
+    [qingxiArr mas_distributeViewsAlongAxis:MASAxisTypeHorizontal withFixedSpacing:10 leadSpacing:10 tailSpacing:10];
+    [qingxiArr mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.bgView.mas_top).offset(150);
+        make.height.mas_equalTo(30);
+    }];
+}
+- (void)removebgView:(UITapGestureRecognizer *)tag {
+    _bgView.hidden = YES;
+}
+- (void)firRoadBtnClick:(UIButton *)button {
+    if (button.tag==_secRoadButton.tag) {
+        return;//同一个按钮直接返回
+    }
+    [self.delegate selectedRodWidthIndex:button.tag-999];
+    _secRoadButton.layer.borderWidth = 0;
+    [_secRoadButton setTitleColor:RGBHex(0xffffff) forState:UIControlStateNormal];
+    _secRoadButton = button;
+    [_secRoadButton setTitleColor:RGBHex(0xf89e0f) forState:UIControlStateNormal];
+    _secRoadButton.layer.borderWidth = 1.0f;
+    
+}
+- (void)qingxituBtnClick:(UIButton *)button {
+    if (button.tag==_qingxiButton.tag) {
+        return;//同一个按钮直接返回
+    }
+    [self.delegate selectedRodWidthIndex:_secRoadButton.tag-999 secIndex:button.tag-2000];
+    _qingxiButton.layer.borderWidth = 0;
+    [_qingxiButton setTitleColor:RGBHex(0xffffff) forState:UIControlStateNormal];
+    _qingxiButton = button;
+    [_qingxiButton setTitleColor:RGBHex(0xf89e0f) forState:UIControlStateNormal];
+    _qingxiButton.layer.borderWidth = 1.0f;
 }
 @end

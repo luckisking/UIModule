@@ -30,8 +30,14 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-#pragma mark 笔记的cell
-@interface DXLiveNoteCell : UITableViewCell
+//#pragma mark 笔记的cell(废弃，有自适应问题问题)
+//@interface DXLiveNoteCell : UITableViewCell
+//@property (nonatomic, strong) DXLiveModuleNoteModel *noteModel;
+//@end
+#pragma mark (新版)笔记的cell
+@interface DXLiveNewNoteCell : UITableViewCell
 @property (nonatomic, strong) DXLiveModuleNoteModel *noteModel;
+@property (nonatomic, strong) YYTextLayout *yyLayout; //yylabel的自适应布局属性
+@property (nonatomic, strong) NSString *stringLayout; //yylabel的自适应布局属性
 @end
 NS_ASSUME_NONNULL_END

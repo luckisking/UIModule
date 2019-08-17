@@ -21,8 +21,9 @@
      self.docView = [[GSDocView alloc] initWithFrame: self.parentPlayLargerWindow.bounds];
      self.docView.backgroundColor = [UIColor blackColor];
      self.docView.gSDocShowType = GSDocEqualFullScreenType;
+     self.docView.delegate = (DXLiveViewController<UIScrollViewDelegate>*)self;//代理方法
      [self.parentPlayLargerWindow addSubview: self.docView];
-     self.docView.delegate = self;
+ 
     
     //初始化视频视图（默认下方小的播放视图）
      self.videoView = [[GSVideoView alloc] initWithFrame: self.parentPlaySmallWindow.bounds];
@@ -400,8 +401,8 @@
     
     self.investigationResultsView.investigation = investigation;
     NSUInteger totalNumber = 0;
-    self.totalUsersArray = [[NSMutableArray alloc] init];
-    self.totalArray = [[NSMutableArray alloc] init];
+    NSMutableArray *totalUsersArray = [[NSMutableArray alloc] init]; //总答题人数
+    NSMutableArray *totalArray = [[NSMutableArray alloc] init];      //总答题结果
     for (int i = 0; i < investigation.questions.count; i ++)
     {
         totalNumber = 0;
@@ -409,14 +410,14 @@
         for (int j = 0; j < que.options.count; j++) {
             GSInvestigationOption *option = que.options[j];
             totalNumber += option.totalSumOfUsers;
-            [self.totalUsersArray addObject:[NSString stringWithFormat:@"%ld",option.totalSumOfUsers]];
+            [totalUsersArray addObject:[NSString stringWithFormat:@"%ld",option.totalSumOfUsers]];
         }
-        [self.totalArray addObject:[NSString stringWithFormat:@"%ld",totalNumber]];
+        [totalArray addObject:[NSString stringWithFormat:@"%ld",totalNumber]];
     }
     [self.investigationResultsView.investigationTableView reloadData];
     self.investigationResultsView.titleLabel.text = investigation.theme;
-    self.investigationResultsView.totalUsersArray = self.totalUsersArray;
-    self.investigationResultsView.totalArray = self.totalArray;
+    self.investigationResultsView.totalUsersArray =totalUsersArray;
+    self.investigationResultsView.totalArray = totalArray;
     [self.view addSubview:self.investigationResultsView];
 }
 
@@ -519,7 +520,7 @@
 
 #pragma GCC diagnostic ignored "-Wobjc-protocol-method-implementation"
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-- (void)sendMessage:(NSString *)content
+- (void)sendGenseeMessage:(NSString *)content
 {
     NSLog(@"????嗯%@",content);
     [ self.broadcastManager setUser:1000000001 chatEnabled:NO];

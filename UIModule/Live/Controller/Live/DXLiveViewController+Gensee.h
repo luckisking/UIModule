@@ -10,8 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DXLiveViewController (Gensee)<GSBroadcastRoomDelegate, GSBroadcastVideoDelegate, GSBroadcastAudioDelegate, GSBroadcastDocumentDelegate, GSDocViewDelegate, GSBroadcastDesktopShareDelegate, GSBroadcastChatDelegate,GSBroadcastInvestigationDelegate,DXLiveViewControllerDelegate,UIScrollViewDelegate>
-
+@interface DXLiveViewController (Gensee)<GSBroadcastRoomDelegate, GSBroadcastVideoDelegate, GSBroadcastAudioDelegate, GSBroadcastDocumentDelegate, GSDocViewDelegate, GSBroadcastDesktopShareDelegate, GSBroadcastChatDelegate,GSBroadcastInvestigationDelegate>
+/*
+ *gensee 附加功能---->实现了问卷和聊天 ，网络切换
+ */
 @end
 
 NS_ASSUME_NONNULL_END

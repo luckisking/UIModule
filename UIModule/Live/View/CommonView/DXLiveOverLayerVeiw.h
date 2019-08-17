@@ -13,6 +13,12 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol DXLiveOverLayerVeiwDelegate <NSObject>
 
 - (void)videoOverLayerClickWithName:(NSString *)name button:(UIButton *)button;
+//cc切换线路
+@optional
+- (void)selectedRodWidthIndex:(NSInteger)rodIndex ;
+//cc切换清晰度
+@optional
+- (void)selectedRodWidthIndex:(NSInteger)rodIndex secIndex:(NSInteger)secIndex ;
 
 @end
 
@@ -31,10 +37,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIButton *cutButton;                       // 切换按钮
 @property (nonatomic, strong) UIButton *fullScreenButton;                // 全屏按钮
 
+//cc直播的切换线路和切换清晰度
+@property (nonatomic, strong) UIView *bgView;                // 线路背景视图
+@property (nonatomic, strong) UIButton *secRoadButton;                // 线路
+@property (nonatomic, strong) UIButton *qingxiButton;                // 清晰度
 
 //初始化方法
 - (instancetype)initWithTarget:(id)target ;
-
+//cc直播的切换线路和切换清晰度的方法
+- (void)selectLinesWithFirRoad:(NSInteger)firRoadNum secRoadKeyArray:(NSArray *)secRoadKeyArray ;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -8,13 +8,14 @@
 
 #import "DXLiveViewController.h"
 
-//#import "CCSDK/RequestData.h"//SDK
-#import "CCSDK/SaveLogUtil.h"//日志
+//#import "CCSDK/SaveLogUtil.h"//日志
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DXLiveViewController (CC)<RequestDataDelegate,UIScrollViewDelegate,UITextFieldDelegate>
-
+@interface DXLiveViewController (CC)<RequestDataDelegate>
+/*
+ *CC 附加功能---->实现了问卷、答题卡、签到和聊天 ，网络切换
+ */
 @end
 
 NS_ASSUME_NONNULL_END

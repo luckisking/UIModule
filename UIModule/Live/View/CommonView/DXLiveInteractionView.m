@@ -107,9 +107,9 @@
         UITableView *fileTableView =  [[UITableView alloc] initWithFrame:CGRectZero style:(UITableViewStylePlain)];
         fileTableView.delegate = self;
         fileTableView.dataSource = self;
-        fileTableView.backgroundColor = [UIColor whiteColor];
-        fileTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-        fileTableView.tableHeaderView= [UIView new];
+        fileTableView.backgroundColor = RGBHex(0xF8F9FA);
+        fileTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        fileTableView.tableHeaderView= [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 10)];
         fileTableView.tableFooterView = [UIView new];
         [scrollView addSubview:fileTableView];
         [fileTableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -120,12 +120,12 @@
         _fileTableView = fileTableView;
 
         //笔记
-        UITableView *noteTableView =  [[UITableView alloc] initWithFrame:CGRectZero style:(UITableViewStylePlain)];
+        UITableView *noteTableView =  [[UITableView alloc] initWithFrame:CGRectZero style:(UITableViewStyleGrouped)];
         noteTableView.dataSource = self;
+        noteTableView.delegate = self;
         noteTableView.backgroundColor = RGBHex(0xF8F9FA);
-        noteTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-        noteTableView.tableHeaderView= [UIView new];
-        noteTableView.tableFooterView = [UIView new];
+        noteTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        noteTableView.tableHeaderView= [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
         [scrollView addSubview:noteTableView];
         [noteTableView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.right.mas_equalTo(scrollView);//最后一个视图 + width自动撑开contenSize
@@ -138,13 +138,9 @@
     
         [chatTableView registerClass:[DXLiveChatCell class] forCellReuseIdentifier:@"chatCell"];
         [fileTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"fileCell"];
-        [noteTableView registerClass:[DXLiveNoteCell class] forCellReuseIdentifier:@"noteCell"];
+        [noteTableView registerClass:[DXLiveNewNoteCell class] forCellReuseIdentifier:@"noteCell"];
         fileTableView.emptyDataSetSource = self;
         fileTableView.emptyDataSetDelegate = self;
-
-    self.noteTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    self.noteTableView.estimatedRowHeight = 50;
-    self.noteTableView.rowHeight = UITableViewAutomaticDimension;
     
 }
 
@@ -161,25 +157,35 @@
         cell.chatInfoLabel.textContainerInset = UIEdgeInsetsMake(10, 5, 10, 5);//设置边距，请在返回heigt的代理方法的高度中加上上下边距
         return cell;
     }else if (tableView==_fileTableView){
-        UITableViewCell *cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        UITableViewCell *cell=[[UITableViewCell alloc]init];
+        cell.backgroundColor = [UIColor whiteColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        UILabel *rightLable= [[UILabel alloc] init];
+        rightLable.textAlignment = NSTextAlignmentRight;
+        rightLable.textColor = RGBHex(0x666666);
+        rightLable.font = [UIFont systemFontOfSize:14];
+        rightLable.text = @"点击预览";
+        [cell.contentView addSubview:rightLable];
+        [rightLable mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.mas_equalTo(cell.contentView);
+            make.width.mas_equalTo(100);
+            make.right.mas_equalTo(cell.contentView).offset(-10);
+        }];
         UILabel *nameLable= [[UILabel alloc] init];
         nameLable.textAlignment = NSTextAlignmentLeft;
-        nameLable.textColor = [UIColor blackColor];
+        nameLable.textColor = RGBHex(0x101010);
         nameLable.font = [UIFont systemFontOfSize:15];
         nameLable.text = [NSString stringWithFormat:@"%@.pdf",_teach_material_file_title];
         [cell.contentView addSubview:nameLable];
         [nameLable mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.bottom.offset(0);
-            make.left.offset(15.0f);
-            make.right.offset(15.0f);
+            make.centerY.mas_equalTo(cell.contentView);
+            make.left.mas_equalTo(cell.contentView).offset(10);
+            make.right.mas_equalTo(rightLable.mas_left).offset(-5);
         }];
+   
         return cell;
     }else {
-        DXLiveNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:@"noteCell"];
-        if(!cell){
-            cell = [[DXLiveNoteCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"noteCell"];
-        }
+        DXLiveNewNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:@"noteCell"];
         cell.noteModel = [self.noteListArray objectAtIndex:indexPath.row];
 
         return cell;
@@ -191,7 +197,7 @@
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     if (tableView==_chatTableView) {
-        return self.dataArray.count;
+        return self.chatArray.count;
     }else if (tableView==_fileTableView){
         if (self.teach_material_file.length<1&&![self.teach_material_file isEqualToString:@""]) {
             return 0;
@@ -215,8 +221,20 @@
         return cell.yyLayout.textBoundingSize.height+37+20;//为37为nameLabel加上上下边距,20为chatInfoLabel上下边距
     }else if (tableView==_fileTableView){
         return 50;
+    }else {
+        
+        DXLiveModuleNoteModel *mode = self.noteListArray[indexPath.row];
+        DXLiveNewNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:@"noteCell"];
+        cell.stringLayout = mode.note_description;
+         if (!mode.screenshot || mode.screenshot.length == 0) {
+            return cell.yyLayout.textBoundingSize.height+120;
+         }else {
+            return cell.yyLayout.textBoundingSize.height+120+44;
+         }
+     
+        
     }
-    return 0;//笔记自动估算高度
+    
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -228,8 +246,8 @@
 
 #pragma mark -- 设置数据超过一屏时滚动到底部
 - (void)setupDataScrollPositionBottom {
-    if (self.dataArray.count) {
-        NSIndexPath *chatLastPath = [NSIndexPath indexPathForRow:self.dataArray.count - 1 inSection:0];
+    if (self.chatArray.count) {
+        NSIndexPath *chatLastPath = [NSIndexPath indexPathForRow:self.chatArray.count - 1 inSection:0];
         [self.chatTableView scrollToRowAtIndexPath:chatLastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     }
 }
@@ -293,7 +311,8 @@
 }
 
 #pragma mark -- 懒加载
-- (NSMutableArray *)dataArray
+
+- (NSMutableArray *)chatArray
 {
     if (!_chatArray) {
         _chatArray = [[NSMutableArray alloc] init];
