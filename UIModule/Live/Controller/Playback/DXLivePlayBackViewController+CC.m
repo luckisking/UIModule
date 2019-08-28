@@ -7,6 +7,7 @@
 //
 
 #import "DXLivePlayBackViewController+CC.h"
+#import "CCDownloadSessionManager.h"
 
 @implementation DXLivePlayBackViewController (CC)
 
@@ -15,13 +16,18 @@
     /*cc*/
     dispatch_async(dispatch_get_main_queue(), ^{
         [self integrationSDK];
-        //监听 回放速率状态变化和播放状态
+        //监听 回放状态变化和播放状态
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayBackStateDidChange:)
                                                      name:IJKMPMoviePlayerPlaybackStateDidChangeNotification object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(movieLoadStateDidChange:)
                                                      name:IJKMPMoviePlayerLoadStateDidChangeNotification
+                                                   object:nil];
+        //播放结束
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(moviePlayerFinish:)
+                                                     name:IJKMPMoviePlayerPlaybackDidFinishNotification
                                                    object:nil];
     });
     
@@ -49,16 +55,18 @@
     parameter.viewerCustomua = @"viewercustomua";//自定义参数,没有的话这么写就可以
     parameter.pptInteractionEnabled = NO;//是否开启ppt滚动
     parameter.DocModeType = 0;//设置当前的文档模式
-    //    parameter.DocShowType = 1;
-    //    parameter.groupid = _contentView.groupId;//用户的groupId
     
+    if (self.ccDownloadedPlayfile) {
+        self.CCPlayDownload = YES;//播放下载视频
+        parameter.destination = self.ccDownloadedPlayfile;//文件地址 为下载好的沙河里面的文件路径
+    }
     //cc在线播放和离线播放 分开成了两个独立管理的类。。。。。。。。
-    if (self.playDownload) {
+    if (self.CCPlayDownload) {
         [self initOfflinePlay:parameter]; //未实现
     }else {
         [self initOnlinePlay:parameter];
     }
-  
+    [self.interfaceView addloadViewWithSuperView:self.overlayView text:@"加载中..." userEnabled:YES];
     
 }
 //在线播放
@@ -68,12 +76,57 @@
 }
 //下载播放
 - (void)initOfflinePlay:(PlayParameter *)parameter {
-    parameter.destination = @"";//文件地址 为下载好的沙河里面的文件路径
     self.offlinePlayBack = [[OfflinePlayBack alloc] initWithParameter:parameter];
     self.offlinePlayBack.delegate = self;
     [self.offlinePlayBack startPlayAndDecompress];
 }
-//监听回放速率改变
+
+//下载点击事件
+- (void)CCDownload  {
+    if (self.ccDownloadedPlayfile) {
+        [self showHint:@"你已经下载该视频"];
+        return;
+    }
+    if (!self.ccDownloadedUrl) {
+        [self showHint:@"下载失败，稍后重试"];
+    }else {
+        NSString * url = [self.ccDownloadedUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"`#%^{}\"[]|\\<> "].invertedSet];
+        if ([[CCDownloadSessionManager manager] checkLocalResourceWithUrl:url]) {//是否已经创建
+            
+            CCDownloadModel * model = [[CCDownloadSessionManager manager]downLoadingModelForURLString:url];
+            if (model.state == CCPBDownloadStateRunning || model.state == CCPBDownloadStateCompleted) {
+                [self showHint:@"你已经下载该视频"];
+                return ;//跳过
+            }
+            [[CCDownloadSessionManager manager] resumeWithDownloadModel:model];
+            
+        } else {//创建下载链接
+            NSArray *array = [url componentsSeparatedByString:@"/"];
+            NSString * fileName = array.lastObject;
+            fileName = [fileName substringToIndex:(fileName.length - 4)];
+            CCDownloadModel *downloadModel = [CCDownloadSessionManager createDownloadModelWithUrl:url FileName:fileName MimeType:@"ccr" AndOthersInfo:@{}];
+            downloadModel.primaryTitle = self.videoTitle;
+            downloadModel.secondaryTitle = self.SecondTitle;
+            downloadModel.sort = self.numberSecondTitle;
+            downloadModel.coverImageUrl = self.imgUrl;
+            downloadModel.courseID = [NSString stringWithFormat:@"%ld",(long)self.courseID];
+            downloadModel.fileUrl = self.teach_material_file;
+            [[CCDownloadSessionManager manager] startWithDownloadModel:downloadModel];
+        }
+    }
+ 
+}
+
+
+
+
+
+
+
+
+
+
+//监听回放改变
 - (void)moviePlayBackStateDidChange:(NSNotification*)notification
 {
     switch (self.requestDataPlayBack?self.requestDataPlayBack.ijkPlayer.playbackState:self.offlinePlayBack.ijkPlayer.playbackState)
@@ -82,18 +135,27 @@
             break;
         }
         case IJKMPMoviePlaybackStatePlaying:
+            
+            NSLog(@"cc回放正在播放。。。。。。。。。。。。。。。。。。。。。。。");
+            [self.interfaceView removeloadView];
+            [self.parentPlayLargerWindow bringSubviewToFront:self.overlayView];
         case IJKMPMoviePlaybackStatePaused: {
-            if(self.overlayView.playbackButton.selected == YES && ([self.requestDataPlayBack isPlaying]||[self.offlinePlayBack isPlaying])) {
-                [self.requestDataPlayBack pausePlayer];
-                [self.offlinePlayBack pausePlayer];
-            }
-            break;
+             NSLog(@"cc回放暂停了。。。。。。。。。。。。。。。。。。。。。。。");
         }
+             break;
         case IJKMPMoviePlaybackStateInterrupted: {
+               NSLog(@"cc回放被打断了。。。。。。。。。。。。。。。。。。。。。。。");
             break;
         }
         case IJKMPMoviePlaybackStateSeekingForward:
+            NSLog(@"cc回放前进。。。。。。。。。。。。。。。。。。。。。。。");
+            [self.interfaceView removeloadView];
+            [self.parentPlayLargerWindow bringSubviewToFront:self.overlayView];
+               break;
         case IJKMPMoviePlaybackStateSeekingBackward: {
+             NSLog(@"cc回放后退。。。。。。。。。。。。。。。。。。。。。。。");
+            [self.interfaceView removeloadView];
+            [self.parentPlayLargerWindow bringSubviewToFront:self.overlayView];
             break;
         }
         default: {
@@ -102,23 +164,27 @@
     }
 }
 
-
 //监听播放状态
 -(void)movieLoadStateDidChange:(NSNotification*)notification
 {
         switch (self.requestDataPlayBack.ijkPlayer.loadState)
         {
-            case IJKMPMovieLoadStateStalled:
+            case IJKMPMovieLoadStateStalled:   NSLog(@"cc加载自动暂停(正在加载)。。。。。。。。。。。。。。。。。。。。。。。");
                 break;
-            case IJKMPMovieLoadStatePlayable:
+            case IJKMPMovieLoadStatePlayable:   NSLog(@"cc加载可以播放。。。。。。。。。。。。。。。。。。。。。。。");
                 break;
-            case IJKMPMovieLoadStatePlaythroughOK:
+            case IJKMPMovieLoadStatePlaythroughOK:   NSLog(@"cc加载可以自动播放。。。。。。。。。。。。。。。。。。。。。。。");
                 break;
             default:
                 break;
         }
 }
-#pragma mark- 必须实现的代理方法（RequestDataPlayBackDelegate和OfflinePlayBackDelegate有一些同名代理方法，这里不做区分）
+//监听播放结束
+- (void)moviePlayerFinish:(NSNotification*)notification {
+    self.isplayFinish = YES;//播放结束
+    self.overlayView.playbackButton.selected = NO;//设置为未播放状态
+}
+#pragma mark- 必须实现的代理方法RequestDataPlayBackDelegate
 
 /**
  *    @brief    请求成功
@@ -139,8 +205,7 @@
         message = reason;
     }
     [self showHint:message];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"liveDocVideoStatus" object:[NSString stringWithFormat:@"%d",YES]];
-
+    [self.interfaceView removeloadView];
 }
 #pragma mark-----------------------功能代理方法 用哪个实现哪个-------------------------------
 #pragma mark - 服务端给自己设置的信息
@@ -158,7 +223,7 @@
  */
 -(void)liveInfo:(NSDictionary *)dic {
     //    NSLog(@"%@",dic);
-    SaveToUserDefaults(LIVE_STARTTIME, dic[@"startTime"]);
+//    SaveToUserDefaults(LIVE_STARTTIME, dic[@"startTime"]);
 }
 #pragma mark- 聊天
 /**
@@ -169,24 +234,19 @@
         return;
     }
     //解析历史聊天
-    NSLog(@"cc历史聊天数组==%@",chatArr);
-//    [self.interactionView onParserChat:chatArr];
+//    NSLog(@"cc历史聊天数组==%@",chatArr);
+    self.chatArr = chatArr;
 }
 
-/**
- *    @brief    time：从直播开始到现在的秒数，SDK会在画板上绘画出来相应的图形
- */
-- (void)continueFromTheTime:(NSInteger)time {
-    NSLog(@"cc回放时间=====%ld",time);
-}
 
-#pragma mark - OfflinePlayBackDelegate 非同名代理方法---------------------
+#pragma mark - OfflinePlayBackDelegate 代理方法---------------------
 #pragma mark- 房间信息
 /**
  *    @brief  房间信息
  */
 -(void)offline_roomInfo:(NSDictionary *)dic{
 //    _roomName = dic[@"name"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"liveDocVideoStatus" object:[NSString stringWithFormat:@"%d",YES]];
     
 }
 #pragma mark- 聊天
@@ -198,7 +258,7 @@
         return;
     }
     //解析历史聊天
-//    [self.interactionView onParserChat:arr];
+    self.chatArr = arr;
 }
 - (void)offline_loadVideoFail {
     NSLog(@"播放器异常，加载失败");
@@ -207,7 +267,6 @@
     UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDestructive handler:nil];
     [alertController addAction:cancelAction];
     [alertController addAction:okAction];
-    
     [self presentViewController:alertController animated:YES completion:nil];
 }
 

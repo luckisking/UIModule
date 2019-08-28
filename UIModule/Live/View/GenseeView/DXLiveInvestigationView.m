@@ -97,7 +97,7 @@ static NSString *liveInvestigationCellIdentifier = @"liveInvestigationCell";
     if (!_backButton) {
         _backButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_backButton setTitle:@"关闭" forState:UIControlStateNormal];
-        [_backButton setTitleColor:CFontColorMore forState:UIControlStateNormal];
+        [_backButton setTitleColor:RGBAColor(102,102,102,1) forState:UIControlStateNormal];
         _backButton.titleLabel.font = [UIFont systemFontOfSize:14];
         [_backButton addTarget:self action:@selector(backButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -140,7 +140,7 @@ static NSString *liveInvestigationCellIdentifier = @"liveInvestigationCell";
         _submitButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _submitButton.frame = CGRectMake(20, 10, IPHONE_WIDTH - 40, 44);
         [_submitButton setTitle:@"提交" forState:UIControlStateNormal];
-        _submitButton.backgroundColor = dominant_GreenColor;
+        _submitButton.backgroundColor =  RGBAColor(28, 184, 119, 1);
         _submitButton.titleLabel.font = [UIFont boldSystemFontOfSize:18];
         _submitButton.layer.masksToBounds = YES;
         _submitButton.layer.cornerRadius = 5;
@@ -189,14 +189,14 @@ static NSString *liveInvestigationCellIdentifier = @"liveInvestigationCell";
     }
     GSInvestigationQuestion *investigationQuestion = self.investigation.questions[indexPath.section];
     if (investigationQuestion.questionType == GSInvestigationQuestionTypeEssay) {
-        self.liveInvestigationCell.contentView.backgroundColor = dominant_bgColor;
+        self.liveInvestigationCell.contentView.backgroundColor = RGBAColor(242, 242, 242, 1) ;
         self.investigationTextView = [[UITextView alloc] init];
         self.investigationTextView.font = [UIFont systemFontOfSize:14];
-        self.investigationTextView.textColor = dominant_BlockColor;
+        self.investigationTextView.textColor = RGBAColor(51, 51, 51, 1);
         self.investigationTextView.layer.borderWidth = 0.5;
         self.investigationTextView.layer.masksToBounds = YES;
         self.investigationTextView.layer.cornerRadius = 5.6;
-        self.investigationTextView.layer.borderColor = live_bottomViewBorderColor.CGColor;
+        self.investigationTextView.layer.borderColor = RGBAColor(199, 199, 204, 1).CGColor;
         self.investigationTextView.delegate = self;
         self.investigationTextView.text = investigationQuestion.essayAnswer;
         
@@ -230,9 +230,9 @@ static NSString *liveInvestigationCellIdentifier = @"liveInvestigationCell";
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     self.topicView = [[UIView alloc] init];
-    self.topicView.backgroundColor = dominant_bgColor;
+    self.topicView.backgroundColor = RGBAColor(242, 242, 242, 1) ;
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, IPHONE_WIDTH, 0.5)];
-    lineView.backgroundColor = live_segmentLineColor;
+    lineView.backgroundColor = RGBAColor(233, 233, 233, 1);
     [self.topicView addSubview:lineView];
     GSInvestigationQuestion *investigationQuestion = self.investigation.questions[section];
     self.topicLabel = [[UILabel alloc] init];
@@ -241,7 +241,7 @@ static NSString *liveInvestigationCellIdentifier = @"liveInvestigationCell";
     NSString *content = [NSString stringWithFormat:@"  %ld.%@",section + 1,investigationQuestion.content];
     NSMutableAttributedString *attributeStr = [[NSMutableAttributedString alloc] initWithString:content];
     NSDictionary *attributeDict = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:16.0],NSFontAttributeName,
-                                   dominant_BlockColor,NSForegroundColorAttributeName,nil];
+                                   RGBAColor(51, 51, 51, 1),NSForegroundColorAttributeName,nil];
     [attributeStr addAttributes:attributeDict range:NSMakeRange(0, attributeStr.length)];
     NSTextAttachment *attach = [[NSTextAttachment alloc] init];
     if (investigationQuestion.questionType == GSInvestigationQuestionTypeSingleChoice) {
@@ -319,7 +319,7 @@ static NSString *liveInvestigationCellIdentifier = @"liveInvestigationCell";
                 
                 option.isSelected = YES;
                 self.liveInvestigationCell = [tableView cellForRowAtIndexPath:indexPath];
-                self.liveInvestigationCell.titleLabel.textColor = dominant_GreenColor;
+                self.liveInvestigationCell.titleLabel.textColor =  RGBAColor(28, 184, 119, 1);
                 
                 
             }
@@ -328,7 +328,7 @@ static NSString *liveInvestigationCellIdentifier = @"liveInvestigationCell";
                 
                 option.isSelected = NO;
                 self.liveInvestigationCell = [tableView cellForRowAtIndexPath:indexPath];
-                self.liveInvestigationCell.titleLabel.textColor = CFontColorMore;
+                self.liveInvestigationCell.titleLabel.textColor = RGBAColor(102,102,102,1);
                 
             }
         }
@@ -341,7 +341,7 @@ static NSString *liveInvestigationCellIdentifier = @"liveInvestigationCell";
                 option.isSelected = NO;
                 
                 self.liveInvestigationCell = [tableView cellForRowAtIndexPath:indexPath];
-                self.liveInvestigationCell.titleLabel.textColor = CFontColorMore;
+                self.liveInvestigationCell.titleLabel.textColor = RGBAColor(102,102,102,1);
                 
             }
             else
@@ -356,7 +356,7 @@ static NSString *liveInvestigationCellIdentifier = @"liveInvestigationCell";
                         
                         tempOption.isSelected = YES;
                         self.liveInvestigationCell = [tableView cellForRowAtIndexPath:indexPath];
-                        self.liveInvestigationCell.titleLabel.textColor = dominant_GreenColor;
+                        self.liveInvestigationCell.titleLabel.textColor =  RGBAColor(28, 184, 119, 1);
                         NSLog(@"cell %d  checked.", i);
                         
                     }
@@ -367,7 +367,7 @@ static NSString *liveInvestigationCellIdentifier = @"liveInvestigationCell";
                         NSIndexPath *otherIndexPath = [NSIndexPath indexPathForRow:i inSection:indexPath.section];
                         
                         self.liveInvestigationCell = [tableView cellForRowAtIndexPath:otherIndexPath];
-                        self.liveInvestigationCell.titleLabel.textColor = CFontColorMore;
+                        self.liveInvestigationCell.titleLabel.textColor = RGBAColor(102,102,102,1);
                         
                         NSLog(@"cell %d  unChecked.", i);
                         
@@ -387,8 +387,8 @@ static NSString *liveInvestigationCellIdentifier = @"liveInvestigationCell";
     [UIView animateWithDuration:0.25 animations:^{
         //输入框最终的位置
         CGRect resultFrame;
-        if (frame.origin.y == KScreenHeight) {
-            resultFrame = CGRectMake(currentFrame.origin.x, KScreenHeight - currentFrame.size.height, currentFrame.size.width, currentFrame.size.height);
+        if (frame.origin.y == IPHONE_HEIGHT) {
+            resultFrame = CGRectMake(currentFrame.origin.x, IPHONE_HEIGHT - currentFrame.size.height, currentFrame.size.width, currentFrame.size.height);
             self.keyboardHeight=0;
             if (IS_IPHONE_X) {
                 self.frame = CGRectMake(0, 0, IPHONE_WIDTH, IPHONE_HEIGHT);
@@ -398,7 +398,7 @@ static NSString *liveInvestigationCellIdentifier = @"liveInvestigationCell";
                 self.frame = CGRectMake(0, 0, IPHONE_WIDTH, IPHONE_HEIGHT);
             }
         }else{
-            resultFrame = CGRectMake(currentFrame.origin.x,KScreenHeight - currentFrame.size.height - frame.size.height , currentFrame.size.width, currentFrame.size.height);
+            resultFrame = CGRectMake(currentFrame.origin.x,IPHONE_HEIGHT - currentFrame.size.height - frame.size.height , currentFrame.size.width, currentFrame.size.height);
             self.keyboardHeight = frame.size.height;
             if (IS_IPHONE_X) {
                 self.frame = CGRectMake(0, 0, IPHONE_WIDTH, IPHONE_HEIGHT - self.keyboardHeight);

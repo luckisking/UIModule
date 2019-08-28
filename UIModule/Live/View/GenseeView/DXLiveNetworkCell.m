@@ -24,7 +24,7 @@
         }];
         
         _contentLabel = [[UILabel alloc] init];
-        _contentLabel.textColor = dominant_BlockColor;
+        _contentLabel.textColor = RGBAColor(51, 51, 51, 1);
         _contentLabel.font = [UIFont systemFontOfSize:15.0];
         [self addSubview:_contentLabel];
         [_contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {

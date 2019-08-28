@@ -512,7 +512,6 @@
     [self.interfaceView.chatArray addObject:msg.richText];
     [self.interfaceView.nameArray addObject:user.userName];
 
-    [self.interfaceView.chatTableView reloadData];
     [self.interfaceView setupDataScrollPositionBottom];
 }
 

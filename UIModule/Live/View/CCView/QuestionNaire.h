@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LiveDefine.h"
 
 
 @interface QuestionNaire : UIView

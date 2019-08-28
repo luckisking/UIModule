@@ -150,7 +150,7 @@
 //
 //    _noteLabel = [[UILabel alloc]init];
 //    _noteLabel.font = [UIFont systemFontOfSize:14];
-//    _noteLabel.textColor = dominant_BlockColor;
+//    _noteLabel.textColor = RGBAColor(51, 51, 51, 1);
 //    _noteLabel.numberOfLines = 0;
 //    [self.contentView addSubview:_noteLabel];
 //    [_noteLabel mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -38,7 +38,7 @@
     self.noteLabel = [[UILabel alloc] initWithFrame:CGRectMake(14, 12.5, 200, 24)];
     self.noteLabel.font = [UIFont systemFontOfSize:17.0];
     self.noteLabel.text = @"记笔记";
-    self.noteLabel.textColor = dominant_BlockColor;
+    self.noteLabel.textColor = RGBAColor(51, 51, 51, 1);
     [self.contentView addSubview:self.noteLabel];
     
     self.noteBackButton = [[UIButton alloc] initWithFrame:CGRectMake(IPHONE_WIDTH - 50, 11, 40, 24)];
@@ -52,7 +52,7 @@
     
     self.noteTextView = [[UITextView alloc] initWithFrame:CGRectMake(17, CGRectGetMaxY(self.noteLabel.frame) + 16, IPHONE_WIDTH - 34, 80)];
     self.noteTextView.font = [UIFont systemFontOfSize:15.0];
-    self.noteTextView.backgroundColor = live_tableViewBgColor;
+    self.noteTextView.backgroundColor = RGBAColor(250, 250, 250, 1);
     self.noteTextView.textContainerInset = UIEdgeInsetsMake(0, 0, 0, 0);
     CGFloat topMargin = 6;
     self.noteTextView.contentInset = UIEdgeInsetsMake(topMargin, 0, 0, 0);
@@ -88,7 +88,7 @@
     self.saveButton.frame = CGRectMake(CGRectGetMaxX(self.noteBackButton.frame) - 100, 11, 40, 24);
     [self.saveButton setTitle:@"保存" forState:UIControlStateNormal];
     self.saveButton.titleLabel.font = [UIFont systemFontOfSize:17.0];
-    [self.saveButton setTitleColor:dominant_GreenColor forState:UIControlStateNormal];
+    [self.saveButton setTitleColor: RGBAColor(28, 184, 119, 1) forState:UIControlStateNormal];
     [self.saveButton addTarget:self action:@selector(saveAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:self.saveButton];
 }

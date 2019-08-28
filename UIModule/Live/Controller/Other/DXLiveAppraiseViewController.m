@@ -36,7 +36,7 @@
     
     self.navigationController.navigationBar.translucent = YES;
     
-    self.view.backgroundColor = live_tableViewBgColor;
+    self.view.backgroundColor = RGBAColor(250, 250, 250, 1);
     
     self.title = @"评价";
     
@@ -97,7 +97,7 @@
     appraiseLabel.frame = CGRectMake(22.5, CGRectGetMaxY(titleLabel.frame) + 14.5, 65, 21);
     appraiseLabel.font = [UIFont systemFontOfSize:15.0];
     appraiseLabel.text = @"整体评价";
-    appraiseLabel.textColor = dominant_BlockColor;
+    appraiseLabel.textColor = RGBAColor(51, 51, 51, 1);
     [self.view addSubview:appraiseLabel];
     
     XHStarRateView *starRateView = [[XHStarRateView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(appraiseLabel.frame), CGRectGetMaxY(titleLabel.frame) + 14.5, 180, 20) numberOfStar:5 rateStyle:XHStarRateViewRateStyeHalfStar isAnimation:YES delegate:self];
@@ -134,7 +134,7 @@
     submitButton.layer.masksToBounds = YES;
     submitButton.layer.cornerRadius = 5;
     submitButton.titleLabel.font = [UIFont systemFontOfSize:18.0];
-    submitButton.backgroundColor = dominant_GreenColor;
+    submitButton.backgroundColor =  RGBAColor(28, 184, 119, 1);
     [submitButton addTarget:self action:@selector(submitButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:submitButton];
     

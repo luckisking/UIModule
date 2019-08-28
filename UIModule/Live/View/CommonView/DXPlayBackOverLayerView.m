@@ -178,11 +178,11 @@
     [self.speedBackground addSubview:speedTitleLabel];
     [layoutArr addObject:speedTitleLabel];
     
-    NSArray *arr = @[@"1X",@"1.5X",@"2X",@"3X"];
-    for (int i = 0; i < arr.count; i++) {
+    _speedArray = @[@"1倍",@"1.5倍",@"2倍",@"3倍"];
+    for (int i = 0; i < _speedArray.count; i++) {
         UIButton *nextBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         nextBtn.tag = i + 3000;
-        [nextBtn setTitle:arr[i] forState:UIControlStateNormal];
+        [nextBtn setTitle:_speedArray[i] forState:UIControlStateNormal];
         [nextBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [nextBtn setTitleColor:[UIColor colorWithRed:28 / 255.0 green:184 / 255.0 blue:119 / 255.0 alpha:1 / 1.0] forState:UIControlStateSelected];
         nextBtn.titleLabel.font = [UIFont boldSystemFontOfSize:16];
@@ -193,7 +193,7 @@
         [layoutArr addObject:nextBtn];
     }
     //等间距离布局
-    [layoutArr mas_distributeViewsAlongAxis:MASAxisTypeVertical withFixedSpacing:20 leadSpacing:25 tailSpacing:20];
+    [layoutArr mas_distributeViewsAlongAxis:MASAxisTypeVertical withFixedSpacing:20 leadSpacing:25 tailSpacing:50];
     [layoutArr mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.speedBackground);
     }];
@@ -424,21 +424,25 @@
         [self.delegate speedActionButton:button];
     }
 }
-- (void)speedFullButtonAction:(UIButton *)button {
-    self.speedBackground.hidden = NO;
-}
-
 - (void)playButtonAction:(UIButton *)button {
     [self excuteDeleteMethod:@"播放" button:button];
 }
 - (void)cutButtonAction:(UIButton *)button {
     [self excuteDeleteMethod:@"切换" button:button];
 }
+
 - (void)fullScreenButtonAction:(UIButton *)button {
     [self excuteDeleteMethod:@"全屏" button:button];
 }
+
+- (void)speedFullButtonAction:(UIButton *)button {
+    [self excuteDeleteMethod:@"全屏倍速显示" button:nil];
+}
 - (void)speedControlFullScreen:(UIButton *)button {
-    [self excuteDeleteMethod:@"全屏倍速" button:button];
+    [self excuteDeleteMethod:@"全屏倍速选择" button:button];
+}
+- (void)speedHidenAction {
+    [self excuteDeleteMethod:@"全屏倍速隐藏" button:nil];
 }
 
 - (void)excuteDeleteMethod:(NSString *)name button:(UIButton *)button{
@@ -448,12 +452,10 @@
 }
 
 
-- (void)speedHidenAction {
-    self.speedBackground.hidden = YES;
-}
-- (void)panActionToPanViewLabel:(NSInteger)seekTime {
+//cc和gensee的时间计算相差1000，cc是秒 ，gensee是毫秒
+- (void)panActionToPanViewLabel:(NSInteger)seekTime  liveType:(BOOL)liveType{
     
-    NSInteger alltime =  (int)_duration  /1000;
+    NSInteger alltime =  liveType?(int)_duration :(int)_duration  /1000;
     
     int allHours = (int)(alltime/3600);
     if (allHours) {
@@ -492,6 +494,8 @@
 //底部竖屏布局和横屏布局
 - (void) newLayout:(BOOL)type {
     if (type) {
+        //顶部
+         self.speedButton.hidden = NO;
         //底部竖屏布局
         self.speedFullButton.hidden = YES;
         self.fullScreenButton.hidden = NO;
@@ -512,6 +516,8 @@
             make.size.mas_equalTo(CGSizeMake(60, subViewHeight));
         }];
     }else {
+        //顶部
+        self.speedButton.hidden = YES;
         //底部横屏布局
         self.speedFullButton.hidden = NO;
         self.fullScreenButton.hidden = YES;
@@ -524,7 +530,7 @@
         }];
         [self.durationSlider mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.footerView).offset(subViewHeight/2);
-            make.right.mas_equalTo(self.footerView).offset(-subViewHeight/2);
+            make.right.mas_equalTo(self.footerView).offset(-subViewHeight);
             make.bottom.mas_equalTo(self.playbackButton.mas_top);
             make.height.mas_equalTo(subViewHeight);
         }];
@@ -535,8 +541,4 @@
     }
 }
 
-//加载视图
-- (void)showLoadView {
-    
-}
 @end

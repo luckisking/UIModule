@@ -35,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIButton *fullScreenButton;                // 全屏按钮
 @property (nonatomic, strong) UIButton *speedButton;                  // 小屏回放倍速按钮
 @property (nonatomic, strong) UIButton *speedFullButton;                  // 大屏回放倍速按钮
+@property (nonatomic, strong) NSArray *speedArray;                  // 倍数数组
 @property (strong, nonatomic) UIButton *downloadBtn;                  // 下载按钮
 
 @property (nonatomic, assign) CGFloat duration; //视频总的时长
@@ -43,13 +44,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) UILabel *currentPlaybackTimeLabel;      // 回放播放时间Label
 @property (strong, nonatomic) UISlider *durationSlider;               // 回放进度条
 @property (assign, nonatomic) BOOL   sliderIsMoving;                   // 进度条正在拖动 
-@property (assign, nonatomic) NSInteger speedCode;                    // 回放倍速(1.0,1.5,2.0,3.0)
+
 @property (nonatomic, strong) UILabel *fullPlayTimeLabel;             //全屏下当前时长/总时长
 @property (nonatomic, strong) UIView *panView;                        //拖动平移View (前进后退)
 @property (nonatomic, strong) UILabel *panViewLabel;                  //拖动平移View的label(前进后退)
 
 @property (nonatomic, strong) UIView *qualityButtonBackground;         //横屏清晰度切换背景图
-
 @property (nonatomic, strong) UIView *speedBackground;                 //横屏倍速切换背景图
 
 
@@ -57,13 +57,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithTarget:(id)target ;
 
 //拖动
-- (void)panActionToPanViewLabel:(NSInteger)seekTime ;
+- (void)panActionToPanViewLabel:(NSInteger)seekTime liveType:(BOOL)liveType;
 
 //底部竖屏布局和横屏布局
 - (void) newLayout:(BOOL)type ;
-
-//加载视图
-- (void)showLoadView ;
 
 @end
 

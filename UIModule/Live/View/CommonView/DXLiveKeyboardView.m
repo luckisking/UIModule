@@ -25,7 +25,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.backgroundColor = live_bottomViewBgColor;
+        self.backgroundColor = RGBAColor(242, 242, 242, 1);
         
         [self addSubview:self.KeyboardTextView];
         
@@ -70,9 +70,9 @@
         _KeyboardTextView.frame = CGRectMake(60, 7 , IPHONE_WIDTH - 74, 30);
         _KeyboardTextView.layer.borderWidth = 0.5;
         _KeyboardTextView.returnKeyType = UIReturnKeySend;
-        _KeyboardTextView.layer.borderColor = live_bottomViewBorderColor.CGColor;
+        _KeyboardTextView.layer.borderColor = RGBAColor(199, 199, 204, 1).CGColor;
         _KeyboardTextView.font = [UIFont systemFontOfSize:14.0];
-        _KeyboardTextView.backgroundColor = live_tableViewBgColor;
+        _KeyboardTextView.backgroundColor = RGBAColor(250, 250, 250, 1);
         _KeyboardTextView.textContainerInset = UIEdgeInsetsMake(0, 0, 0, 0);
         CGFloat topMargin = 7.5;
         _KeyboardTextView.contentInset = UIEdgeInsetsMake(topMargin, 0, 0, 0);
@@ -95,7 +95,7 @@
     if (!_sendButton) {
         _sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_sendButton setTitle:@"发送" forState:UIControlStateNormal];
-        [_sendButton setTitleColor:dominant_BlockColor forState:UIControlStateNormal];
+        [_sendButton setTitleColor:RGBAColor(51, 51, 51, 1) forState:UIControlStateNormal];
         _sendButton.hidden = YES;
         _sendButton.titleLabel.font = [UIFont systemFontOfSize:16.0];
         [_sendButton addTarget:self action:@selector(sendAction:) forControlEvents:UIControlEventTouchUpInside];

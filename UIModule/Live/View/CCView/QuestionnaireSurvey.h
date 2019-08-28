@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "LiveDefine.h"
 //关闭按钮回调
 typedef void(^CloseBlock)(void);
 //提交按钮回调

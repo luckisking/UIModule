@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LiveDefine.h"
 
 typedef void(^VoteBtnClickedSingle)(NSInteger index);//单选回调
 

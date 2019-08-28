@@ -90,7 +90,7 @@ static NSString *liveInvestigationResultsCellIdentifier = @"DXLiveInvestigationR
     if (!_backButton) {
         _backButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_backButton setTitle:@"关闭" forState:UIControlStateNormal];
-        [_backButton setTitleColor:CFontColorMore forState:UIControlStateNormal];
+        [_backButton setTitleColor:RGBAColor(102,102,102,1) forState:UIControlStateNormal];
         _backButton.titleLabel.font = [UIFont systemFontOfSize:14];
         [_backButton addTarget:self action:@selector(backButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -145,14 +145,14 @@ static NSString *liveInvestigationResultsCellIdentifier = @"DXLiveInvestigationR
     }
     GSInvestigationQuestion *investigationQuestion = self.investigation.questions[indexPath.section];
     if (investigationQuestion.questionType == GSInvestigationQuestionTypeEssay) {
-        self.liveInvestigationResultsCell.contentView.backgroundColor = dominant_bgColor;
+        self.liveInvestigationResultsCell.contentView.backgroundColor = RGBAColor(242, 242, 242, 1) ;
         self.investigationTextView = [[UITextView alloc] init];
         self.investigationTextView.font = [UIFont systemFontOfSize:14];
-        self.investigationTextView.textColor = dominant_BlockColor;
+        self.investigationTextView.textColor = RGBAColor(51, 51, 51, 1);
         self.investigationTextView.layer.borderWidth = 0.5;
         self.investigationTextView.layer.masksToBounds = YES;
         self.investigationTextView.layer.cornerRadius = 5.6;
-        self.investigationTextView.layer.borderColor = live_bottomViewBorderColor.CGColor;
+        self.investigationTextView.layer.borderColor = RGBAColor(199, 199, 204, 1).CGColor;
         self.investigationTextView.delegate = self;
         self.investigationTextView.userInteractionEnabled = NO;
         self.investigationTextView.text = investigationQuestion.essayAnswer;
@@ -171,7 +171,7 @@ static NSString *liveInvestigationResultsCellIdentifier = @"DXLiveInvestigationR
         NSLog(@"%ld,%ld",[investigationQuestion.options[indexPath.row] totalSumOfUsers],[self.totalArray[indexPath.section] integerValue]);
         self.progressBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         self.progressBtn.titleLabel.font = [UIFont systemFontOfSize:7.0];
-        [self.progressBtn setTitleColor:dominant_GreenColor forState:UIControlStateNormal];
+        [self.progressBtn setTitleColor: RGBAColor(28, 184, 119, 1) forState:UIControlStateNormal];
         [self.liveInvestigationResultsCell addSubview:self.progressBtn];
         [self.progressBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.liveInvestigationResultsCell.mas_top).offset(5);
@@ -181,7 +181,7 @@ static NSString *liveInvestigationResultsCellIdentifier = @"DXLiveInvestigationR
         }];
         _bgLayer = [self buildShapeLayerColor:RGBAColor(216, 216, 216, 1) lineWidth:1];
         [_progressBtn.layer addSublayer:_bgLayer];
-        _progressLayer = [self buildShapeLayerColor:dominant_GreenColor lineWidth:1];
+        _progressLayer = [self buildShapeLayerColor: RGBAColor(28, 184, 119, 1) lineWidth:1];
         _progressLayer.strokeEnd = 0;
         [_bgLayer addSublayer:_progressLayer];
         
@@ -245,9 +245,9 @@ static NSString *liveInvestigationResultsCellIdentifier = @"DXLiveInvestigationR
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     self.topicView = [[UIView alloc] init];
-    self.topicView.backgroundColor = dominant_bgColor;
+    self.topicView.backgroundColor = RGBAColor(242, 242, 242, 1) ;
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, IPHONE_WIDTH, 0.5)];
-    lineView.backgroundColor = live_segmentLineColor;
+    lineView.backgroundColor = RGBAColor(233, 233, 233, 1);
     [self.topicView addSubview:lineView];
     GSInvestigationQuestion *investigationQuestion = self.investigation.questions[section];
     self.topicLabel = [[UILabel alloc] init];
@@ -256,7 +256,7 @@ static NSString *liveInvestigationResultsCellIdentifier = @"DXLiveInvestigationR
     NSString *content = [NSString stringWithFormat:@"  %ld.%@",section + 1,investigationQuestion.content];
     NSMutableAttributedString *attributeStr = [[NSMutableAttributedString alloc] initWithString:content];
     NSDictionary *attributeDict = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:16.0],NSFontAttributeName,
-                                   dominant_BlockColor,NSForegroundColorAttributeName,nil];
+                                   RGBAColor(51, 51, 51, 1),NSForegroundColorAttributeName,nil];
     [attributeStr addAttributes:attributeDict range:NSMakeRange(0, attributeStr.length)];
     NSTextAttachment *attach = [[NSTextAttachment alloc] init];
     if (investigationQuestion.questionType == GSInvestigationQuestionTypeSingleChoice) {

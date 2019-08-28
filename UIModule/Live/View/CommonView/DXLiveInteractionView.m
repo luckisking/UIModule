@@ -18,7 +18,7 @@
 @property (strong, nonatomic) UIWebView *pdfWebView;    //使用weView浏览pdf文档
 @property (strong, nonatomic) UIButton *closePdfButton; //关闭webView
 @property (assign, nonatomic) BOOL pdfOPenSuccess; //pdf打开成功
-
+@property (strong, nonatomic) UIView *loadView; //加载动图
 @end
 
 @implementation DXLiveInteractionView
@@ -247,6 +247,7 @@
 #pragma mark -- 设置数据超过一屏时滚动到底部
 - (void)setupDataScrollPositionBottom {
     if (self.chatArray.count) {
+        [self.chatTableView reloadData];//这个不能少，有可能从后台返回，ui没刷新，数据刷新了，导致越界
         NSIndexPath *chatLastPath = [NSIndexPath indexPathForRow:self.chatArray.count - 1 inSection:0];
         [self.chatTableView scrollToRowAtIndexPath:chatLastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     }
@@ -347,20 +348,20 @@
 {
     if (!_textButton) {
         _textButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _textButton.frame = CGRectMake(15, 8, KScreenWidth - 30, 28.5);
+        _textButton.frame = CGRectMake(15, 8, IPHONE_WIDTH - 30, 28.5);
         _textButton.layer.masksToBounds = YES;
         _textButton.layer.cornerRadius = 5.6;
         _textButton.layer.borderWidth = 0.5;
-        _textButton.layer.borderColor = live_bottomViewBorderColor.CGColor;
-        _textButton.backgroundColor = live_tableViewBgColor;
+        _textButton.layer.borderColor = RGBAColor(199, 199, 204, 1).CGColor;
+        _textButton.backgroundColor = RGBAColor(250, 250, 250, 1);
         _textButton.titleLabel.font = [UIFont systemFontOfSize:14];
         _textButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         _textButton.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
         [_textButton addTarget:self.delegate action:@selector(didSelectChatButton) forControlEvents:UIControlEventTouchUpInside];
-        [_textButton setTitleColor:dominant_grayColor forState:UIControlStateNormal];
+        [_textButton setTitleColor:RGBAColor(153, 153, 153, 1)  forState:UIControlStateNormal];
         
         UIView *view = [[UIView alloc] init];
-        view.backgroundColor = live_bottomViewBgColor;
+        view.backgroundColor = RGBAColor(242, 242, 242, 1);
         [self addSubview:view];
         [view addSubview:_textButton];
         [view mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -378,7 +379,7 @@
         
         _pdfWebView = [[UIWebView alloc] initWithFrame:CGRectZero];
         _pdfWebView.delegate = self;
-        _pdfWebView.backgroundColor = KWhiteColor;
+        _pdfWebView.backgroundColor = [UIColor whiteColor];
         _pdfWebView.opaque = NO;
         _pdfWebView.scrollView.showsVerticalScrollIndicator = NO;
         _pdfWebView.scrollView.bounces = NO;
@@ -408,5 +409,53 @@
         }];
     }
     return _pdfWebView;
+}
+- (void)addloadViewWithSuperView:(UIView *)view text:(nullable NSString  *)text userEnabled:(BOOL)enabled{
+    if (!view||![UIImage imageNamed:@"loading1"]) return;//图片必须迁移过来
+    _loadView = [[UIView alloc] init];
+    _loadView.layer.zPosition = 9999;
+    _loadView.userInteractionEnabled = !enabled;
+    //拦截事件传递
+    [_loadView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loadViewtap)]];
+    [_loadView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(loadViewpan)]];
+    [view addSubview:_loadView];
+    [_loadView mas_makeConstraints:^(MASConstraintMaker *make){
+        make.edges.mas_equalTo(view);
+    }];
+    UIImageView *loadImageView = [[UIImageView alloc] init];
+    [_loadView addSubview:loadImageView];
+    loadImageView.image = [UIImage imageNamed:@"loading1"];
+    NSMutableArray *imageArray = [NSMutableArray array];
+    for (int i = 1; i < 9; i ++) {
+        NSString *imageName = [NSString stringWithFormat:@"loading%d",i];
+        [imageArray addObject:[UIImage imageNamed:imageName]];
+    }
+    loadImageView.animationImages = imageArray;
+    loadImageView.animationDuration = 1.0;
+    loadImageView.animationRepeatCount = 3000;
+    [loadImageView startAnimating];
+    [loadImageView mas_makeConstraints:^(MASConstraintMaker *make){
+        make.center.mas_equalTo(view);
+        make.size.mas_equalTo(CGSizeMake(20,20));
+    }];
+    if (text) {
+        UILabel *label  = [[UILabel alloc] init];
+        label.text = text;
+        label.font = [UIFont systemFontOfSize:12];
+        label.textColor = [UIColor whiteColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        [_loadView addSubview:label];
+        [label mas_makeConstraints:^(MASConstraintMaker *make){
+            make.top.mas_equalTo(loadImageView.mas_bottom).offset(10);
+            make.centerX.mas_equalTo(view.mas_centerX);
+        }];
+    }
+}
+- (void)removeloadView {
+    [_loadView removeFromSuperview];
+}
+- (void)loadViewtap {
+}
+- (void)loadViewpan {
 }
 @end

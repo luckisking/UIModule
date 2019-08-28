@@ -148,7 +148,6 @@
             }
         }
     }
-    [self.interfaceView.chatTableView reloadData];
     [self.interfaceView setupDataScrollPositionBottom];
 }
 /**

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LiveDefine.h"
 
 //签到回调
 typedef void(^LotteryBtnClicked)(void);

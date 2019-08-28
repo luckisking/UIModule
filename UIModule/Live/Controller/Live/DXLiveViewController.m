@@ -38,6 +38,7 @@
 @property (nonatomic, strong) DXLiveShieldView *shieldView;              // 关闭直播时弹出的视图
 @property (nonatomic, assign) CGFloat keyboardHeight;                    // 键盘高度
 @property (nonatomic, assign) NSInteger toIndex; //由于SPPageMenu，全屏返回之后调整了scrollViewde contenSize，导致显示bug，借这个属性更正
+@property (assign, nonatomic) BOOL lockLandscape; //用户是否点击全屏状态下锁定自动旋转
 @end
 
 @implementation DXLiveViewController
@@ -80,6 +81,7 @@
     isSegment = YES;
     _request = [[DXLiveRequest alloc] init];
     [self getCommentData]; //查询是否评价过该课程
+    //    _lockLandscape = YES;//横屏锁定（设计图横屏左边有个锁的点击事件）默认不锁定 NO
 
     [self initParentPlayLargerWindow];  //直播大父视图
     [self initParentPlaySmallWindow]; //直播小父视图
@@ -90,13 +92,17 @@
     }else {
          [self initGenseeLive];  //genseesdk
     }
-   
     [self initIntefaceView]; //非直播视图
     [self setupLiveKeyboardView]; //聊天textView父视图
     [self setupLiveNoteKeyboardView]; //笔记textView父视图
     [self.view addSubview:self.connectShieldView]; //正在进入直播
 }
-
+- (void)setUserInfoWihtUid:(long long)uid uname:(NSString *)uname email:(NSString *)email phone:(NSString *)phone  {
+    _uid = uid;
+    _uname = uname;
+    _email = email;
+    _phone = phone;
+}
 /** 大的播放视图 */
 - (void)initParentPlayLargerWindow {
     
@@ -104,8 +110,8 @@
     [self.view addSubview:_headerSafeView];
     _headerSafeView.backgroundColor = [UIColor blackColor];
     [_headerSafeView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.mas_equalTo(0);
-        make.width.height.mas_equalTo(0);
+        make.left.top.right.mas_equalTo(self.view);
+        make.height.mas_equalTo(iPhoneX?44:0);
     }];
     
     _parentPlayLargerWindow = [[UIView alloc] init];
@@ -117,17 +123,7 @@
         make.height.mas_equalTo(self.view.mas_width).multipliedBy(9.0/16.0);
     }];
     [self.view layoutIfNeeded];
-
-    //播放操作
-    _overlayView = [[DXLiveOverLayerVeiw alloc] initWithTarget:self];
-    _overlayView.titleLabel.text = _videoTitle;
-    [_parentPlayLargerWindow addSubview:_overlayView];
-//    _overlayView.layer.zPosition = 100000;//不响应
-    [_overlayView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0,0,0));
-    }];
-    [_overlayView addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSignelLargerTap:)]];
-    
+    [self initOverlayView];//初始化播放操作视图(要先于sdk加载，不然duration会赋值失败)
 }
 /**初始化小的播放视图 */
 - (void)initParentPlaySmallWindow {
@@ -147,6 +143,20 @@
     [_parentPlaySmallWindow addSubview:self.smallVideoBackButton];
     //拖动平移
     [_parentPlaySmallWindow addGestureRecognizer: [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(fullPanGestureRecognizer:)]];
+    
+}
+//初始化播放操作视图
+- (void)initOverlayView {
+    
+    //播放操作
+    _overlayView = [[DXLiveOverLayerVeiw alloc] initWithTarget:self];
+    _overlayView.titleLabel.text = _videoTitle;
+    [_parentPlayLargerWindow addSubview:_overlayView];
+    //    _overlayView.layer.zPosition = 100000;//不响应
+    [_overlayView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0,0,0));
+    }];
+    [_overlayView addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSignelLargerTap:)]];
     
 }
 //初始化非播放视图
@@ -637,7 +647,7 @@
 
 // 分享按钮方法
 - (void)shareButtonAction:(UIButton *)button {
-//    DXCustomShareView *shareView = [[DXCustomShareView alloc]initWithFrame:CGRectMake(0, 0, KScreenWidth, KScreenHeight)];
+//    DXCustomShareView *shareView = [[DXCustomShareView alloc]initWithFrame:CGRectMake(0, 0, IPHONE_WIDTH, IPHONE_HEIGHT)];
 //    [shareView setShareAry:nil delegate:self];
 //    [self.navigationController.view addSubview:shareView];
     
@@ -741,7 +751,10 @@
     return YES;
 }
 - (BOOL)shouldAutorotate {
-    return NO;
+    if (_lockLandscape&&[UIApplication sharedApplication].statusBarOrientation != UIInterfaceOrientationPortrait) {
+        return NO;//横屏锁定
+    }
+    return YES;
 }
 //初始化的时候和模态present屏幕的方向（竖屏初始化）
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
@@ -764,7 +777,7 @@
         _overlayView.fullScreenButton.selected = NO;
         [_parentPlayLargerWindow mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(self.view);
-            make.top.mas_equalTo(self.view.mas_top).offset(iPhoneX?kStatusBarHeight:0);
+            make.top.mas_equalTo(self.view.mas_top).offset(iPhoneX?44:0);
             make.height.mas_equalTo(self.view.mas_width).multipliedBy(9.0/16.0);
         }];
         [_parentPlaySmallWindow mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -787,10 +800,8 @@
        
     }else {
         //全屏
+        //全屏下masonry提示约束多于冲突原因是pageMenu的高度是44 但是此时他的父视图( _interfaceView)没有高度，不影响布局;强逼症者去除pageMenu高度即可
         _overlayView.fullScreenButton.selected = YES;
-        [_parentPlayLargerWindow mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsMake(0, iPhoneX?44:0, 0, 0));
-        }];
         [_parentPlaySmallWindow mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(self.view.mas_bottom).offset(iPhoneX?-70-34:-70);
             make.right.mas_equalTo(self.view.mas_right).offset(-10);
@@ -805,12 +816,18 @@
         }];
         //设置iphoneX 的44黑色刘海
         if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
+            [_parentPlayLargerWindow mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.edges.mas_equalTo(UIEdgeInsetsMake(0, iPhoneX?44:0, 0, 0));
+            }];
             [_headerSafeView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.bottom.mas_equalTo(self.view);
                 make.left.mas_equalTo(self.view);
                 make.width.mas_equalTo(iPhoneX?44:0);
             }];
         }else if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
+            [_parentPlayLargerWindow mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, iPhoneX?44:0));
+            }];
             [_headerSafeView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.bottom.mas_equalTo(self.view);
                 make.right.mas_equalTo(self.view);
@@ -823,33 +840,39 @@
     }
     [self.view bringSubviewToFront:_parentPlayLargerWindow];
     [self.view bringSubviewToFront:_parentPlaySmallWindow];
-    [self.view layoutIfNeeded];
-    if (_liveType) {
-        //cc直播
-        if ([self.overlayView.cutButton.accessibilityIdentifier isEqualToString:@"视频"]) {
-            [_requestData changeDocFrame:_parentPlayLargerWindow.bounds];
-            [_requestData changePlayerFrame:_parentPlaySmallWindow.bounds];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //这个必须放在主线程中，不然layoutIfNeeded可能不会第一时间生效，一半的可能性
+        [self.view layoutIfNeeded];
+        if (_liveType) {
+            //cc直播
+            if ([self.overlayView.cutButton.accessibilityIdentifier isEqualToString:@"视频"]) {
+                [_requestData changeDocFrame:_parentPlayLargerWindow.bounds];
+                [_requestData changePlayerFrame:_parentPlaySmallWindow.bounds];
+            }else {
+                [_requestData changeDocFrame:_parentPlaySmallWindow.bounds];
+                [_requestData changePlayerFrame:_parentPlayLargerWindow.bounds];
+            }
         }else {
-            [_requestData changeDocFrame:_parentPlaySmallWindow.bounds];
-            [_requestData changePlayerFrame:_parentPlayLargerWindow.bounds];
+            //gensee直播
+            if ([_docView.superview isEqual:_parentPlayLargerWindow]) {
+                _docView.frame = _parentPlayLargerWindow.bounds ;
+                _videoView.frame = _parentPlaySmallWindow.bounds ;
+            }else {
+                _docView.frame = _parentPlaySmallWindow.bounds ;
+                _videoView.frame = _parentPlayLargerWindow.bounds ;
+            }
         }
-    }else {
-        //gensee直播
-        if ([_docView.superview isEqual:_parentPlayLargerWindow]) {
-            _docView.frame = _parentPlayLargerWindow.bounds ;
-            _videoView.frame = _parentPlaySmallWindow.bounds ;
-        }else {
-            _docView.frame = _parentPlaySmallWindow.bounds ;
-            _videoView.frame = _parentPlayLargerWindow.bounds ;
-        }
-    }
-    [_interfaceView.scrollView setContentOffset:CGPointMake(IPHONE_WIDTH * _toIndex, 0) animated:NO];
+        [_interfaceView.scrollView setContentOffset:CGPointMake(IPHONE_WIDTH * _toIndex, 0) animated:NO];
+    });
 }
 // 全屏按钮方法
 - (void)fullScreenButtonAction:(UIButton *)button {
     // 关闭键盘
     [self.liveNoteKeyboardView.noteTextView resignFirstResponder];
     [self.liveKeyboardView.KeyboardTextView resignFirstResponder];
+    if (_lockLandscape) {
+        _lockLandscape = NO;
+    }
     if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait) {
         [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationLandscapeRight) forKey:@"orientation"];
     }else {
@@ -891,7 +914,7 @@
 }
 
 - (void)getCommentData {
-    [_request getCourseComment:_courseID pageIndex:0 pageSize:10 uid:_uid success:^(NSDictionary * _Nonnull dic, BOOL state) {
+    [_request getCourseComment:_courseID pageIndex:0 pageSize:10 uid:(NSInteger)_uid success:^(NSDictionary * _Nonnull dic, BOOL state) {
         if (state) {
             self-> isComment = YES;
         }else {
@@ -952,7 +975,7 @@
                 
             }else{
                 #pragma mark -- 退出直播选中理由接口
-                [_request liveFeedbackWithPhone:_phone email:_email uid:_uid txt:backReasonString courseId:_courseID sectionID:_sectionID success:nil fail:nil];
+                [_request liveFeedbackWithPhone:_phone email:_email uid:(NSInteger)_uid txt:backReasonString courseId:_courseID sectionID:_sectionID success:nil fail:nil];
             }
             break;
         default:

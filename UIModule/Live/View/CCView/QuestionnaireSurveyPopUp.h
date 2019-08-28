@@ -8,6 +8,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LiveDefine.h"
 
 //确认回调
 typedef void(^SureBtnBlock)(void);

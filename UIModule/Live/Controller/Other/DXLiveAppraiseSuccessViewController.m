@@ -87,7 +87,7 @@
     successLabel.textAlignment = NSTextAlignmentCenter;
     successLabel.text = @"提交成功";
     successLabel.font = [UIFont boldSystemFontOfSize:18];
-    successLabel.textColor = dominant_BlockColor;
+    successLabel.textColor = RGBAColor(51, 51, 51, 1);
     [self.view addSubview:successLabel];
     
     UILabel *contentLabel = [[UILabel alloc] init];

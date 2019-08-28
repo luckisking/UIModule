@@ -38,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithFrame:(CGRect)frame target:(id)target;
 - (void)setupDataScrollPositionBottom ; //是的聊天显示最底部的信息
 
+- (void)addloadViewWithSuperView:(UIView *)view text:(nullable NSString  *)text userEnabled:(BOOL)enabled;//加载动图 ,yes 用户可以继续操作
+- (void)removeloadView ;  //移除加载动图
 
 
 @end

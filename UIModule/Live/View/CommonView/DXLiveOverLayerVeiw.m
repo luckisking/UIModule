@@ -308,13 +308,13 @@
     UILabel * lineLabel = [[UILabel alloc] init];
     lineLabel.text = @"线路:";
     lineLabel.textColor = RGBHex(0xffffff) ;
-    lineLabel.font = [UIFont systemFontOfSize:FontSize_30];
+    lineLabel.font = [UIFont systemFontOfSize:15];
     [_bgView addSubview:lineLabel];
     //清晰度
     UILabel * clarityLabel = [[UILabel alloc] init];
     clarityLabel.text = @"清晰度:";
     clarityLabel.textColor = RGBHex(0xffffff);
-    clarityLabel.font = [UIFont systemFontOfSize:FontSize_30];
+    clarityLabel.font = [UIFont systemFontOfSize:15];
     [_bgView addSubview:clarityLabel];
 
     [xianluArr addObject:lineLabel];
@@ -324,11 +324,11 @@
         UIButton * btn = [[UIButton alloc] init];
         [btn setTitle:firRoadArr[i] forState:UIControlStateNormal];
         btn.titleLabel.textColor = [UIColor whiteColor];
-        btn.titleLabel.font = [UIFont systemFontOfSize:FontSize_30];
+        btn.titleLabel.font = [UIFont systemFontOfSize:15];
         btn.tag = i+1000;
         [_bgView addSubview:btn];
         btn.layer.borderColor = RGBHex(0xf89e0f).CGColor;
-        btn.layer.cornerRadius = CCGetRealFromPt(25);
+        btn.layer.cornerRadius = 10;//CCGetRealFromPt(25);
         [btn layoutIfNeeded];
         if (btn.tag == 1000) {
             _secRoadButton = btn;
@@ -342,11 +342,11 @@
         UIButton * btn = [[UIButton alloc] init];
         [btn setTitle:secRoadKeyArray[i] forState:UIControlStateNormal];
         btn.titleLabel.textColor = [UIColor whiteColor];
-        btn.titleLabel.font = [UIFont systemFontOfSize:FontSize_30];
+        btn.titleLabel.font = [UIFont systemFontOfSize:15];
         btn.tag = i+2000;
         [_bgView addSubview:btn];
         btn.layer.borderColor = RGBHex(0xf89e0f).CGColor;
-        btn.layer.cornerRadius = CCGetRealFromPt(25);
+        btn.layer.cornerRadius = 10;// CCGetRealFromPt(25);
         [btn layoutIfNeeded];
         if (btn.tag == 2000) {
             _qingxiButton = btn;

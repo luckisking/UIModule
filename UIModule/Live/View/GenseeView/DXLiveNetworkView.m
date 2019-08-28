@@ -141,9 +141,9 @@ static NSString *liveNetworkCellIdentifier = @"DXLiveNetworkCell";
         _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _cancelButton.titleLabel.font = [UIFont systemFontOfSize:15.0];
         [_cancelButton setTitle:@"取消" forState:UIControlStateNormal];
-        [_cancelButton setTitleColor:CFontColor1 forState:UIControlStateNormal];
+        [_cancelButton setTitleColor:RGBHex(0x1f1f1f) forState:UIControlStateNormal];
         _cancelButton.layer.cornerRadius = 8;
-        _cancelButton.layer.borderColor = CFontColor1.CGColor;
+        _cancelButton.layer.borderColor = RGBHex(0x1f1f1f).CGColor;
         _cancelButton.layer.borderWidth = 0.5;
         _cancelButton.tag = 100000;
         [_cancelButton addTarget:self action:@selector(chooseButtonAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -158,7 +158,7 @@ static NSString *liveNetworkCellIdentifier = @"DXLiveNetworkCell";
         _closeButton.titleLabel.font = [UIFont systemFontOfSize:15.0];
         _closeButton.tag = 100000;
         [_closeButton setImage:[UIImage imageNamed:@"circle_close_YM"] forState:UIControlStateNormal];
-        [_closeButton setTitleColor:CFontColor1 forState:UIControlStateNormal];
+        [_closeButton setTitleColor:RGBHex(0x1f1f1f) forState:UIControlStateNormal];
         [_closeButton addTarget:self action:@selector(chooseButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _cancelButton;
@@ -195,7 +195,7 @@ static NSString *liveNetworkCellIdentifier = @"DXLiveNetworkCell";
 {
     if (!_horizontalLineView) {
         _horizontalLineView = [[UIView alloc] init];
-        _horizontalLineView.backgroundColor = dominant_grayColor;
+        _horizontalLineView.backgroundColor = RGBAColor(153, 153, 153, 1) ;
     }
     return _horizontalLineView;
 }
@@ -204,7 +204,7 @@ static NSString *liveNetworkCellIdentifier = @"DXLiveNetworkCell";
 {
     if (!_verticalLineView) {
         _verticalLineView = [[UIView alloc] init];
-        _verticalLineView.backgroundColor = dominant_grayColor;
+        _verticalLineView.backgroundColor = RGBAColor(153, 153, 153, 1) ;
     }
     return _verticalLineView;
 }

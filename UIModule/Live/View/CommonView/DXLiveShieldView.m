@@ -237,7 +237,7 @@ static NSString *liveBackCellIdentifier = @"DXLiveBackCell";
 {
     if (!_horizontalLineView) {
         _horizontalLineView = [[UIView alloc] init];
-        _horizontalLineView.backgroundColor = dominant_grayColor;
+        _horizontalLineView.backgroundColor = RGBAColor(153, 153, 153, 1) ;
     }
     return _horizontalLineView;
 }
@@ -246,7 +246,7 @@ static NSString *liveBackCellIdentifier = @"DXLiveBackCell";
 {
     if (!_verticalLineView) {
         _verticalLineView = [[UIView alloc] init];
-        _verticalLineView.backgroundColor = dominant_grayColor;
+        _verticalLineView.backgroundColor = RGBAColor(153, 153, 153, 1) ;
     }
     return _verticalLineView;
 }
@@ -300,7 +300,7 @@ static NSString *liveBackCellIdentifier = @"DXLiveBackCell";
         }];
         
         _contentLabel = [[UILabel alloc] init];
-        _contentLabel.textColor = dominant_BlockColor;
+        _contentLabel.textColor = RGBAColor(51, 51, 51, 1);
         _contentLabel.font = [UIFont systemFontOfSize:16.0];
         [self addSubview:_contentLabel];
         [_contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {

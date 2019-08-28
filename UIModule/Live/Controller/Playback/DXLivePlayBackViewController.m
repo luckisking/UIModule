@@ -18,14 +18,14 @@
 @property(nonatomic, strong)UIView *headerSafeView;//iphoneX头部
 @property (nonatomic, assign) NSInteger toIndex; //由于SPPageMenu，全屏返回之后调整了scrollViewde contenSize，导致显示bug，借这个属性更正
 @property (assign, nonatomic) BOOL isComment; //是否评论过该课程
+@property (assign, nonatomic) BOOL lockLandscape; //用户是否点击全屏状态下锁定自动旋转
+@property (assign, nonatomic) int timeout; //倒计时
+@property (nonatomic,strong)NSTimer   *countDownTimer;//操作视图消失倒计时
 @property (assign, nonatomic) CGFloat lastPanX; //平移X坐标
 @property (assign, nonatomic) CGFloat lastSilderValue; //平移X的值
 
 @property (nonatomic,strong)NSTimer                     *timer;//cc的计时器 ..cc回放需要自己计算计时器播放，计算聊天时序，计算暂停播放 。。。。。
 @property (nonatomic,assign)float                       playBackRate;//CC播放速率 配合timer使用的
-
-
-
 
 //拖动屏幕,前进后退相关
 //@property (strong, nonatomic) DXPlayActionView *playActionView; //快进快退view
@@ -46,7 +46,7 @@
     [self.view bringSubviewToFront:_parentPlaySmallWindow];
     [_parentPlayLargerWindow bringSubviewToFront:_overlayView];
     [_interfaceView setupDataScrollPositionBottom];
-    
+
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
@@ -63,13 +63,20 @@
 
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(docVideoStatus:) name:@"liveDocVideoStatus" object:nil];//初始化成功通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(interfaceOrientationNotification:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterBackgroundNotification) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+    //添加通知，拔出耳机后暂停播放
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(routeChange:) name:AVAudioSessionRouteChangeNotification object:nil];
     _request = [[DXLiveRequest alloc] init];
     [self getCommentData]; //查询是否评价过该课程
     _playBackRate = 1;
+    [self startcountDownTimer];
+    //    _lockLandscape = YES;//横屏锁定（设计图横屏左边有个锁的点击事件）默认不锁定 NO
     
     [self initParentPlayLargerWindow];  //直播大父视图
     [self initParentPlaySmallWindow]; //直播小父视图
+
     
     //初始化直播（注意先初始化上面的大的和小的直播父视图）
     if (_liveType) {
@@ -77,12 +84,16 @@
     }else {
         [self initGenseePlayBack];  //genseesdk
     }
-    
     [self initIntefaceView]; //非直播视图
 
 
 }
-
+- (void)setUserInfoWihtUid:(long long)uid uname:(NSString *)uname email:(NSString *)email phone:(NSString *)phone  {
+    _uid = uid;
+    _uname = uname;
+    _email = email;
+    _phone = phone;
+}
 
 /** 大的播放视图 */
 - (void)initParentPlayLargerWindow {
@@ -91,8 +102,8 @@
     [self.view addSubview:_headerSafeView];
     _headerSafeView.backgroundColor = [UIColor blackColor];
     [_headerSafeView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.mas_equalTo(0);
-        make.width.height.mas_equalTo(0);
+        make.left.top.right.mas_equalTo(self.view);
+        make.height.mas_equalTo(iPhoneX?44:0);
     }];
     
     _parentPlayLargerWindow = [[UIView alloc] init];
@@ -104,7 +115,24 @@
         make.height.mas_equalTo(self.view.mas_width).multipliedBy(9.0/16.0);
     }];
     [self.view layoutIfNeeded];
+    [self initOverlayView];//初始化播放操作视图(要先于sdk加载，不然duration会赋值失败)
+}
+/**初始化小的播放视图 */
+- (void)initParentPlaySmallWindow {
+    CGRect frame = CGRectMake(IPHONE_WIDTH-144, CGRectGetMaxY(_parentPlayLargerWindow.frame)+50, 144, 144*9.0/16);
+    _parentPlaySmallWindow = [[UIView alloc] initWithFrame:frame];//自动布局无法移动（播放时间一直在更新，自动布局跟着更新）
+    _parentPlaySmallWindow.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:_parentPlaySmallWindow];
+    //关闭
+    [_parentPlaySmallWindow addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSignelSmallTap:)]];
+    [self setupSmallVideoBackButton];//小播放窗口显示关闭按钮
+    [_parentPlaySmallWindow addSubview:self.smallVideoBackButton];
+    //拖动平移
+    [_parentPlaySmallWindow addGestureRecognizer: [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(fullPanGestureRecognizer:)]];
     
+}
+//初始化播放操作视图
+- (void)initOverlayView {
     //播放操作
     _overlayView = [[DXPlayBackOverLayerView alloc] initWithTarget:self];
     _overlayView.titleLabel.text = _videoTitle;
@@ -114,34 +142,14 @@
         make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0,0,0));
     }];
     [_overlayView addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSignelLargerTap:)]];//点击事件
-//    [_overlayView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)]];//平移事件
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];
+    //    [_overlayView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)]];//平移事件
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];//平移事件
     pan.delegate = self; //解决手势冲突
     [_overlayView addGestureRecognizer:pan];
     //滑块事件
-    [_overlayView.durationSlider addTarget:self action:@selector(durationSliderDone:) forControlEvents:UIControlEventTouchUpInside];
+    //    [_overlayView.durationSlider addTarget:self action:@selector(durationSliderDone:) forControlEvents:UIControlEventTouchUpInside];//不适用
     [_overlayView.durationSlider addTarget:self action:@selector(sliderValurChanged:forEvent:) forControlEvents:UIControlEventValueChanged];
-    
-}
-/**初始化小的播放视图 */
-- (void)initParentPlaySmallWindow {
-    _parentPlaySmallWindow = [[UIView alloc] init];
-    _parentPlaySmallWindow.backgroundColor = [UIColor blackColor];
-    [self.view addSubview:_parentPlaySmallWindow];
-    [_parentPlaySmallWindow mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.parentPlayLargerWindow.mas_bottom).offset(50);
-        make.right.mas_equalTo(self.view.mas_right);
-        make.width.mas_equalTo(144);
-        make.height.mas_equalTo(144*9.0/16); //cc不支持3.0/4的比例，gensee支持,这里使用通用的9/16
-    }];
-    [self.view layoutIfNeeded];
-    //关闭
-    [_parentPlaySmallWindow addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSignelSmallTap:)]];
-    [self setupSmallVideoBackButton];//小播放窗口显示关闭按钮
-    [_parentPlaySmallWindow addSubview:self.smallVideoBackButton];
-    //拖动平移
-    [_parentPlaySmallWindow addGestureRecognizer: [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(fullPanGestureRecognizer:)]];
-    
+    [_overlayView.durationSlider  addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(durationSliderDone:)]];
 }
 //初始化非播放视图
 - (void)initIntefaceView {
@@ -174,9 +182,14 @@
     if ([name isEqualToString:@"返回"]) [self backButtonAction:button];
     else if ([name isEqualToString:@"分享"]) [self shareButtonAction:button];
     else if ([name isEqualToString:@"更多"]) [self menuButtonAction:button];
+    else if ([name isEqualToString:@"下载"]) [self startDownloadAction:button];
     else if ([name isEqualToString:@"播放"]) [self playButtonAction:button];
     else if ([name isEqualToString:@"切换"]) [self cutButtonAction:button];
     else if ([name isEqualToString:@"全屏"]) [self fullScreenButtonAction:button];
+    else if ([name isEqualToString:@"全屏倍速显示"]) [self fullScreenSpeedShowAction];
+    else if ([name isEqualToString:@"全屏倍速选择"]) [self fullScreenSpeedSelectAction:button];
+    else if ([name isEqualToString:@"全屏倍速隐藏"]) [self fullScreenSpeedHidenAction];
+    
 }
 
 #pragma mark -通知方法
@@ -188,34 +201,65 @@
         [self showHint:@"视频、文档加载失败"];
     }
     //不管成功失败
-    [self playButtonAction:_overlayView.playbackButton]; //设置按钮为播放状态
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        //回放初始化视图的耗时较长，可能数据已经开始返回，视图还没有初始化完成(还没有添加到父视图上)..
-        [self.parentPlayLargerWindow bringSubviewToFront:self.overlayView];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _overlayView.playbackButton.selected = NO;
+        [self playButtonAction:_overlayView.playbackButton]; //设置按钮为播放状态
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            //cc回放初始化视图的耗时较长，可能数据已经开始返回，视图还没有初始化完成(还没有添加到父视图上)..
+            [self.parentPlayLargerWindow bringSubviewToFront:self.overlayView];
+        });
     });
-    
+}
+//下载
+- (void)startDownloadAction:(UIButton *)button {
+    if (_liveType) {
+        //cc
+    }else {
+        //gensee
+        if (_genseePlayDownload) {
+            [self showHint:@"该视频已经下载完成"];
+        }else {
+              [self genseeDownload];
+        }
+    }
 }
 //播放、暂停
 - (void)playButtonAction:(UIButton *)button {
     button.selected = !button.selected;
     
-    //不做判断 如果为nil自然调用无效
     if (button.selected) {
         //恢复播放
-
         if (_liveType) {
-            [self.requestDataPlayBack startPlayer]; //cc
-            [self.offlinePlayBack startPlayer];//cc
+            if (_isplayFinish) {
+                _isplayFinish = NO;
+                [self.requestDataPlayBack replayPlayer]; //cc
+                [self.offlinePlayBack replayPlayer];//cc  //不做判断 如果为nil自然调用无效
+            }else {
+                [self.requestDataPlayBack startPlayer]; //cc
+                [self.offlinePlayBack startPlayer];//cc  //不做判断 如果为nil自然调用无效
+            }
+           
             [self startTimer];
         }else {
-            [self.vodplayer resume]; //gensee
+            if (_isplayFinish) {
+                _isplayFinish = NO;
+                button.selected = NO;//设置播放按钮为非播放（原因是播放结束后按钮自动为暂停状态,重新播放会自动设置按钮为播放状态）
+                if (_genseePlayDownload) {
+                    //重新播放下载视频方法--（不在重新推送聊天）
+                    [self.vodplayer OfflinePlay:NO];
+                }else {
+                    //重新播放在线视频--(不在重新推送聊天)
+                    [self.vodplayer OnlinePlay:NO audioOnly:NO];
+                }
+            }else {
+                [self.vodplayer resume]; //gensee
+            }
         }
     
    
     }
     else {
         //暂停
-        
         if (_liveType) {
             [self.requestDataPlayBack pausePlayer]; //cc
             [self.offlinePlayBack pausePlayer]; //cc
@@ -227,9 +271,57 @@
 
     }
 }
+//APP将要进入后台
+- (void)appWillEnterBackgroundNotification {
+    [self stopTimer];
+    [self stopcountDownTimer];
+}
 
+//APP将要进入前台
 - (void)appDidBecomeActive {
-    [self.vodplayer resetAudioPlayer];
+    [self startcountDownTimer];
+    if (_liveType) {
+        //cc
+        /*  当视频播放被打断时，重新加载视频  cc只能从新开始。。。。(如果不支持后台模式暂停进入后台再回来只能重新开始。。。。。cc设计。。。)*/
+        if (self.requestDataPlayBack?!self.requestDataPlayBack.ijkPlayer.playbackState:!self.offlinePlayBack.ijkPlayer.playbackState) {
+            [self.requestDataPlayBack replayPlayer];
+            [self.offlinePlayBack replayPlayer];
+        }
+        if (self.overlayView.playbackButton.selected||self.requestDataPlayBack.isPlaying||self.offlinePlayBack.isPlaying) {
+            [self startTimer];
+        }
+    }else {
+        //gensee
+        [self.vodplayer resetAudioPlayer];
+    }
+
+
+
+}
+//拔出耳机暂停播放
+-(void)routeChange:(NSNotification *)notification{
+    NSDictionary *dic=notification.userInfo;
+    int changeReason= [dic[AVAudioSessionRouteChangeReasonKey] intValue];
+    //等于AVAudioSessionRouteChangeReasonOldDeviceUnavailable表示旧输出不可用
+    if (changeReason==AVAudioSessionRouteChangeReasonOldDeviceUnavailable) {
+        AVAudioSessionRouteDescription *routeDescription=dic[AVAudioSessionRouteChangePreviousRouteKey];
+        AVAudioSessionPortDescription *portDescription= [routeDescription.outputs firstObject];
+        //原设备为耳机则暂停
+        if ([portDescription.portType isEqualToString:@"Headphones"]) {
+            //暂停
+            if (_overlayView.playbackButton.selected) {
+                _overlayView.playbackButton.selected = NO;
+                if (_liveType) {
+                    [self.requestDataPlayBack pausePlayer]; //cc
+                    [self.offlinePlayBack pausePlayer]; //cc
+                    [self stopTimer];
+                }else {
+                    [self.vodplayer pause];//gensee
+                }
+            }
+        }
+    }
+
 }
 //CC开始播放 计时器
 -(void)startTimer {
@@ -247,16 +339,11 @@
 -(void)timerfunc{
 
     dispatch_async(dispatch_get_main_queue(), ^{
+        [self.parentPlayLargerWindow bringSubviewToFront:self.overlayView];
         //获取当前播放时间和视频总时长
-        NSTimeInterval position = (int)round(self.requestDataPlayBack.currentPlaybackTime);
-        NSTimeInterval duration =   self.overlayView.duration;//(int)round(self.requestDataPlayBack.playerDuration);
-//        //存在播放器最后一点不播放的情况，所以把进度条的数据对到和最后一秒想同就可以了
-//        if(duration - position == 1 && (self.overlayView.durationSlider.value == position || self.overlayView.durationSlider.value == duration)) {
-//            position = duration;
-//        }
-//        self.duration = round(self.requestDataPlayBack.playerDuration);
-//        self.overlayView.duration = round(self.requestDataPlayBack.playerDuration);
-        
+        NSTimeInterval position = round(self.requestDataPlayBack?self.requestDataPlayBack.currentPlaybackTime:self.offlinePlayBack.currentPlaybackTime);
+        NSTimeInterval duration = round(self.requestDataPlayBack?self.requestDataPlayBack.playerDuration:self.offlinePlayBack.playerDuration);
+        self.overlayView.duration = duration;//必须写在这里其他地方可能拿不到。。。
         //当前时长
         self.overlayView.currentPlaybackTimeLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d",(int)(position/60)/60,(int)(position/60)%60, (int)(position)%60];
         //总时长
@@ -265,45 +352,35 @@
             //滑块
             [self.overlayView.durationSlider setValue:(position / duration) animated:YES];
         }
-//
-//        //校对SDK当前播放时间
-//        if(position == 0 && self.playerView.sliderValue != 0) {
-//            self.requestDataPlayBack.currentPlaybackTime = self.playerView.sliderValue;
-//            //            position = self.playerView.sliderValue;
-//            self.playerView.slider.value = self.playerView.sliderValue;
-//            //        } else if(fabs(position - self.playerView.slider.value) > 10) {
-//            //            self.requestDataPlayBack.currentPlaybackTime = self.playerView.slider.value;
-//            ////            position = self.playerView.slider.value;
-//            //            self.playerView.sliderValue = self.playerView.slider.value;
-//        } else {
-//            self.playerView.slider.value = position;
-//            self.playerView.sliderValue = self.playerView.slider.value;
-//        }
-//
-//        //校对本地显示速率和播放器播放速率
-//        if(self.requestDataPlayBack.ijkPlayer.playbackRate != self.playerView.playBackRate) {
-//            self.requestDataPlayBack.ijkPlayer.playbackRate = self.playerView.playBackRate;
-//            //#ifdef LockView
-//            //校对锁屏播放器播放速率
-//            [_lockView updatePlayBackRate:self.requestDataPlayBack.ijkPlayer.playbackRate];
-//            //#endif
-//            [self.playerView startTimer];
-//        }
-//        if(self.playerView.pauseButton.selected == NO && self.requestDataPlayBack.ijkPlayer.playbackState == IJKMPMoviePlaybackStatePaused) {
-//            //开启播放视频
-//            [self.requestDataPlayBack startPlayer];
-//        }
-//        /* 获取当前时间段的文档数据  time：从直播开始到现在的秒数，SDK会在画板上绘画出来相应的图形 */
-//        [self.requestDataPlayBack continueFromTheTime:self.playerView.sliderValue];
-//
-//        /*  加载聊天数据 */
-//        [self parseChatOnTime:(int)self.playerView.sliderValue];
-//        //更新左侧label
-//        self.playerView.leftTimeLabel.text = [NSString stringWithFormat:@"%02d:%02d", (int)(self.playerView.sliderValue / 60), (int)(self.playerView.sliderValue) % 60];
-//        //#ifdef LockView
-//        /*  校对锁屏播放器进度 */
-//        [_lockView updateCurrentDurtion:_requestDataPlayBack.currentPlaybackTime];
-//        //#endif
+
+        /* 获取当前时间段的文档数据  time：从直播开始到现在的秒数，SDK会在画板上绘画出来相应的图形 （同步文档信息）*/
+        [self.requestDataPlayBack continueFromTheTime:self.overlayView.durationSlider.value*self.overlayView.duration];
+        [self.offlinePlayBack continueFromTheTime:self.overlayView.durationSlider.value*self.overlayView.duration];
+        /*  按照时间顺序显示加载聊天数据 */
+        NSUInteger index = self.interfaceView.chatArray.count;//当前聊天位置
+        for (NSUInteger i = index; i<self.chatArr.count; i++) {
+            int time =  [self.chatArr[i][@"time"] intValue];
+            if (time< (int)position) {
+                NSDictionary *dic = self.chatArr[i];
+                    if (![dic[@"status"] isEqualToString:@"1"]){
+                        if (dic[@"content"]) {
+                            [self.interfaceView.chatArray addObject:dic[@"content"]];
+                            [self.interfaceView.nameArray addObject:dic[@"userName"]?:@""];
+                            if ([dic[@"userrole"] isEqualToString:@"publisher"]) {
+                                [self.interfaceView.imageArray addObject:@"lecturer_nor"];
+                            }else {
+                                [self.interfaceView.imageArray addObject:dic[@"useravatar"]?:@""];
+                            }
+            
+                        }
+                    }
+                    [self.interfaceView setupDataScrollPositionBottom];
+            }else{
+                break;
+            }
+        }
+
+
     });
 }
 
@@ -311,7 +388,7 @@
 - (void)setPlayLocation:(NSTimeInterval)duration {
     if (_liveType) {
         //cc
-        if (_playDownload) {
+        if (_CCPlayDownload) {
             //离线
             _offlinePlayBack.currentPlaybackTime = duration;
         }else {
@@ -326,23 +403,33 @@
 //小屏倍数切换
 - (void) speedActionButton:(UIButton *)button {
     
-    NSArray *buttonArr =  @[@"1倍",@"1.5倍",@"2倍",@"3倍"]; //我们只取4个值
-    int index = 0;
+    NSArray *buttonArr = _overlayView.speedArray;  //@[@"1倍",@"1.5倍",@"2倍",@"3倍"]; //我们只取4个值
     for (int i = 0; i<buttonArr.count; i++) {
         if ([button.titleLabel.text isEqualToString:buttonArr[i]]) {
             if (i==3) {
                 [button setTitle:buttonArr[0] forState:(UIControlStateNormal)];
-                index=0;
             }else {
                 [button setTitle:buttonArr[i+1] forState:(UIControlStateNormal)];
-                index = i+1;
+
             }
             break;
         }
     }
+    [self setSpeedWithString: button.titleLabel.text];
+    //大小屏同步
+    for (UIButton *btn in _overlayView.speedBackground.subviews) {
+        if ([btn isKindOfClass:[UIButton class]]) {
+            btn.selected = NO;
+            if ([btn.titleLabel.text isEqualToString:button.titleLabel.text]) {
+                btn.selected = YES;
+            }
+        }
+    }
+}
+- (void)setSpeedWithString:(NSString *)string {
     if (_liveType) {
         //cc 可以任意设置值
-        NSString *rateString =  buttonArr[index];
+        NSString *rateString =  string;
         _requestDataPlayBack.ijkPlayer.playbackRate = [[rateString substringToIndex:rateString.length-1] floatValue];
         _offlinePlayBack.ijkPlayer.playbackRate =   [[rateString substringToIndex:rateString.length-1] floatValue];
         _playBackRate = [[rateString substringToIndex:rateString.length-1] floatValue];
@@ -351,13 +438,34 @@
         //gensee (Gensee SDK有9个固定的值)
         NSArray *arr =    [NSArray arrayWithObjects:@"1倍", @"1.25倍", @"1.5倍", @"1.75倍", @"2倍", @"2.5倍", @"3倍", @"3.5倍", @"4倍", nil];
         for (int i = 0; i<arr.count; i++) {
-            if ([button.titleLabel.text isEqualToString:arr[i]]) {
+            if ([string isEqualToString:arr[i]]) {
                 [self.vodplayer SpeedPlay:i];
                 break;
             }
         }
     }
-   
+}
+//大屏倍数显示
+- (void)fullScreenSpeedShowAction{
+    _overlayView.speedBackground.hidden = NO;
+    [self.view bringSubviewToFront:_parentPlayLargerWindow];//防止被小播放视图遮挡
+}
+//大屏倍数切换
+- (void)fullScreenSpeedSelectAction:(UIButton*)button {
+    for (UIButton *btn in button.superview.subviews) {
+        if ([btn isKindOfClass:[UIButton class]]) {
+            btn.selected = NO;
+        }
+    }
+    button.selected = YES;
+    [_overlayView.speedButton setTitle:button.titleLabel.text forState:(UIControlStateNormal)];//大小屏同步
+    [self setSpeedWithString: button.titleLabel.text];
+    [self fullScreenSpeedHidenAction];
+}
+//大屏倍数隐藏
+- (void)fullScreenSpeedHidenAction{
+    _overlayView.speedBackground.hidden = YES;
+    [self.view bringSubviewToFront:_parentPlaySmallWindow];//调出小播放视图
 }
 
 #pragma mark - SPPageMenu的代理方法
@@ -467,7 +575,7 @@
 }
 // 小视屏全屏拖拽方法
 - (void)fullPanGestureRecognizer:(UIPanGestureRecognizer *)panGestureRecognizer{
-    
+    _timeout = 5; //倒计时时间
     CGPoint translation = [panGestureRecognizer translationInView:self.view];
     CGPoint newCenter = CGPointMake(panGestureRecognizer.view.center.x+ translation.x,
                                     panGestureRecognizer.view.center.y + translation.y);//    限制屏幕范围
@@ -481,12 +589,11 @@
 // 大视频手势点击
 - (void)handleSignelLargerTap:(UIGestureRecognizer *)gestureRecognizer
 {
-
+     _timeout = 5; //倒计时时间
     //点击大播放视图
     if (self.overlayView.headerView.hidden) {
         self.overlayView.footerView.hidden = NO;
         self.overlayView.headerView.hidden = NO;
-        [self startClickTime];
     } else {
         self.overlayView.footerView.hidden = YES;
         self.overlayView.headerView.hidden = YES;
@@ -494,35 +601,43 @@
 }
 // 大视频平移手势
 - (void)panAction:(UIPanGestureRecognizer *)pan {
-    
+     _timeout = 5; //倒计时时间
+    if (_isplayFinish) {
+        //如果播放已经结束，平移事件无效，需要用户手动点击重新开始播放，或者滑动slider
+        return;
+    }
     if (pan.state == UIGestureRecognizerStateBegan) {
         
-        _overlayView.panView.hidden = NO;
+        
         _lastPanX = [pan locationInView:self.overlayView].x;
         _overlayView.sliderIsMoving = YES;
+        NSLog(@"pan开始拖动");
         
     }else if (pan.state == UIGestureRecognizerStateChanged) {
         
+        _overlayView.panView.hidden = NO;
         CGFloat scale =  ([pan locationInView:self.overlayView].x-_lastPanX)/_overlayView.frame.size.width;//如果觉得移动太快可以根据视频的的长度 调整
         NSTimeInterval nowTime =  (NSTimeInterval)((_overlayView.durationSlider.value + scale)*_overlayView.duration);
         if (nowTime>0) {
-              [_overlayView panActionToPanViewLabel:nowTime/1000];
+            [_overlayView panActionToPanViewLabel:_liveType?nowTime:nowTime/1000 liveType:_liveType];
         }else {
-              [_overlayView panActionToPanViewLabel:0];
+              [_overlayView panActionToPanViewLabel:0 liveType:_liveType];
         }
         
     }else {
+         NSLog(@"pan结束拖动");
         CGFloat scale =   ([pan locationInView:self.overlayView].x-_lastPanX)/_overlayView.frame.size.width;
         NSTimeInterval nowTime =  (NSTimeInterval)((_overlayView.durationSlider.value + scale)*_overlayView.duration);
         if (nowTime>0) {
-            [_overlayView panActionToPanViewLabel:nowTime/1000];
+            [_overlayView panActionToPanViewLabel:_liveType?nowTime:nowTime/1000 liveType:_liveType];
             [self setPlayLocation:nowTime];
         }else {
-            [_overlayView panActionToPanViewLabel:0];
+            [_overlayView panActionToPanViewLabel:0 liveType:_liveType];
             [self setPlayLocation:0];
         }
-          _overlayView.panView.hidden = YES;
-         _overlayView.sliderIsMoving = NO;
+        _overlayView.playbackButton.selected = YES;//设置按钮为播放状态
+        _overlayView.panView.hidden = YES;
+        _overlayView.sliderIsMoving = NO;
     }
     
 }
@@ -539,93 +654,99 @@
 }
 
 //滑块点击
-- (void)durationSliderDone:(UISlider *)slider {
+- (void)durationSliderDone:(UITapGestureRecognizer *)tap {
     
-    NSLog(@"没有拖动，而是在点击");
-    
-//    [self.vodplayer seekTo:slider.value * _overlayView.duration];
-    //    播放结束
-//    if (NO) {
-////        [self.vodplayer OnlinePlay:NO audioOnly:NO];
-//    }
-    _overlayView.playbackButton.selected = YES;//设置为播放状态
+     _timeout = 5; //倒计时时间
+    NSLog(@"点滑动结束");
+    if (_overlayView.sliderIsMoving) {
+        _overlayView.sliderIsMoving = NO;
+    }else {
+            CGFloat value = [tap locationInView:tap.view].x/tap.view.frame.size.width;
+            [_overlayView.durationSlider setValue:value animated:YES];
+    }
+    _overlayView.sliderIsMoving = NO;//结束拖动
+    _overlayView.panView.hidden = YES;
+
+    //播放结束
+    if (_isplayFinish) {
+        [self playButtonAction:_overlayView.playbackButton];//主动调用重新播放按钮
+    }
+    //设置播放位置（顺序不能错 ，要先判断是否播放结束）
+    [self setPlayLocation:_overlayView.duration * _overlayView.durationSlider.value];
+
 
 }
 //拖动滑块放大显示拖动到的时间
 - (void)sliderValurChanged:(UISlider *)slider forEvent:(UIEvent *)event {
-    
+     _timeout = 5; //倒计时时间
     UITouch *touchEvent = [[event allTouches] anyObject];
-    NSLog(@"拖动状态是？？？==%ld",touchEvent.phase);
     switch (touchEvent.phase) {
         case UITouchPhaseBegan:
         {
-            
             _overlayView.panView.hidden = NO;
             _overlayView.sliderIsMoving = YES;
             _lastSilderValue = slider.value;
-            
+            NSInteger nowTime =  (NSInteger)(slider.value*_overlayView.duration);
+            [_overlayView panActionToPanViewLabel:_liveType?nowTime:nowTime/1000 liveType:_liveType];
             NSLog(@"开始拖动....");
             
         } break;
             
         case UITouchPhaseMoved:
         {
-            
             NSLog(@"正在拖动???");
             NSInteger nowTime =  (NSInteger)(slider.value*_overlayView.duration);
-            [_overlayView panActionToPanViewLabel:nowTime/1000];
+            [_overlayView panActionToPanViewLabel:_liveType?nowTime:nowTime/1000 liveType:_liveType];
             
         } break;
-        case UITouchPhaseEnded|UITouchPhaseCancelled:
+        case UITouchPhaseEnded:
         {
-            NSLog(@"结束拖动");
-            
-            [self setPlayLocation:_overlayView.duration * slider.value];
+            //结束拖动和点击手势有冲突
+            [self setPlayLocation:_overlayView.duration * _overlayView.durationSlider.value];
+            _overlayView.sliderIsMoving = NO;//结束拖动
             _overlayView.panView.hidden = YES;
-            _overlayView.sliderIsMoving = NO;
-            
+            NSLog(@"结束拖动。。。。。。。。。。。。。。。。。。。。");
         } break;
-            
+        case UITouchPhaseCancelled:
+        {
+            NSLog(@"取消拖动。。。。。。。。。。。。。。。。。。。。。。");
+        } break;
         default:
         {
-            NSLog(@"拖动终结");
-            [self setPlayLocation:_overlayView.duration * slider.value];
-            _overlayView.panView.hidden = YES;
-            _overlayView.sliderIsMoving = NO;
-            
+            NSLog(@"拖动default。。。。。。。。。。。。。。。。。。");
         } break;
     }
 }
 // 小视频手势点击
 - (void)handleSignelSmallTap:(UIGestureRecognizer *)gestureRecognizer
 {
+     _timeout = 5; //倒计时时间
     //点击小播放视图
     [_parentPlaySmallWindow bringSubviewToFront:_smallVideoBackButton];
     if ( self.smallVideoBackButton.hidden) {
         self.smallVideoBackButton.hidden = NO;
-        [self startClickTime];
     }else{
         self.smallVideoBackButton.hidden = YES;
     }
 }
+//计时器
+-(void)startcountDownTimer {
+    __weak typeof(self) weakSelf = self;
+    _countDownTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0) target:weakSelf selector:@selector(startClickTime) userInfo:nil repeats:YES];
+}
+-(void) stopcountDownTimer {
+    if([_countDownTimer isValid]) {
+        [_countDownTimer invalidate];
+        _countDownTimer = nil;
+    }
+}
 - (void)startClickTime{
-    __block int timeout = 5; //倒计时时间
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,queue);
-    dispatch_source_set_timer(timer,dispatch_walltime(NULL, 0),1.0*NSEC_PER_SEC, 0); //每秒执行
-    dispatch_source_set_event_handler(timer, ^{
-        if (timeout == 0) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.overlayView.footerView.hidden = YES;
-                self.overlayView.headerView.hidden = YES;
-                self.smallVideoBackButton.hidden = YES;
-                dispatch_source_cancel(timer);
-                
-            });
-        }
-        timeout--;
-    });
-    dispatch_resume(timer);
+    self.timeout --; //倒计时时间
+    if (self.timeout==0) {
+        self.overlayView.footerView.hidden = YES;
+        self.overlayView.headerView.hidden = YES;
+        self.smallVideoBackButton.hidden = YES;
+    }
 }
 
 #pragma mark - -------- 大视屏button点击事件 ----------
@@ -644,6 +765,7 @@
             self.vodplayer = nil;
             self.item = nil;
         }
+        self.manager = nil;
         //CC
         if (_requestDataPlayBack) {//在线
             [_requestDataPlayBack requestCancel];
@@ -654,14 +776,15 @@
             _offlinePlayBack = nil;
         }
         [self stopTimer];
-//        [self.navigationController popViewControllerAnimated:YES];
-         [self dismissViewControllerAnimated:YES completion:nil];
+        [self stopcountDownTimer];
+        [self.navigationController popViewControllerAnimated:YES];
+//         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
 
 // 分享按钮方法
 - (void)shareButtonAction:(UIButton *)button {
-    //    DXCustomShareView *shareView = [[DXCustomShareView alloc]initWithFrame:CGRectMake(0, 0, KScreenWidth, KScreenHeight)];
+    //    DXCustomShareView *shareView = [[DXCustomShareView alloc]initWithFrame:CGRectMake(0, 0, IPHONE_WIDTH, IPHONE_HEIGHT)];
     //    [shareView setShareAry:nil delegate:self];
     //    [self.navigationController.view addSubview:shareView];
     
@@ -702,7 +825,7 @@
         if (_liveType) {
             //cc 就是这么复杂，已经写的很简洁了
             if ( [self.overlayView.cutButton.accessibilityIdentifier isEqualToString:@"视频"]) {
-                if (_playDownload) {//离线
+                if (_CCPlayDownload) {//离线
                     [_offlinePlayBack changeDocParent:_parentPlaySmallWindow];
                     [_offlinePlayBack changePlayerParent:_parentPlayLargerWindow];
                     [_offlinePlayBack changeDocFrame:_parentPlaySmallWindow.bounds];
@@ -718,7 +841,7 @@
                 [_overlayView.cutButton setImage:IMG(@"live_doc") forState:UIControlStateNormal];
                 _overlayView.cutButton.accessibilityIdentifier = @"文档";
             }else {
-                if (_playDownload) {//离线
+                if (_CCPlayDownload) {//离线
                     [_offlinePlayBack changeDocParent:_parentPlayLargerWindow];
                     [_offlinePlayBack changePlayerParent:_parentPlaySmallWindow];
                     [_offlinePlayBack changeDocFrame:_parentPlayLargerWindow.bounds];
@@ -762,7 +885,10 @@
     return YES;
 }
 - (BOOL)shouldAutorotate {
-    return NO;
+    if (_lockLandscape&&[UIApplication sharedApplication].statusBarOrientation != UIInterfaceOrientationPortrait) {
+        return NO;//横屏锁定
+    }
+    return YES;
 }
 //初始化的时候和模态present屏幕的方向（竖屏初始化）
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
@@ -785,14 +911,8 @@
         _overlayView.fullScreenButton.selected = NO;
         [_parentPlayLargerWindow mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(self.view);
-            make.top.mas_equalTo(self.view.mas_top).offset(iPhoneX?kStatusBarHeight:0);
+            make.top.mas_equalTo(self.view.mas_top).offset(iPhoneX?44:0);
             make.height.mas_equalTo(self.view.mas_width).multipliedBy(9.0/16.0);
-        }];
-        [_parentPlaySmallWindow mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.parentPlayLargerWindow.mas_bottom).offset(50);
-            make.right.mas_equalTo(self.view.mas_right);
-            make.width.mas_equalTo(144);
-            make.height.mas_equalTo(144*9.0/16);
         }];
         [_overlayView.headerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(60);
@@ -801,37 +921,34 @@
             make.height.mas_equalTo(40);
         }];
         [_headerSafeView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.top.mas_equalTo(0);
-            make.width.height.mas_equalTo(0);
+            make.left.top.right.mas_equalTo(self.view);
+            make.height.mas_equalTo(iPhoneX?44:0);
         }];
-        
         
     }else {
         //全屏
+        //全屏下masonry提示约束多于冲突原因是pageMenu的高度是44 但是此时他的父视图( _interfaceView)没有高度，不影响布局;强逼症者去除pageMenu高度即可
         _overlayView.fullScreenButton.selected = YES;
-        [_parentPlayLargerWindow mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsMake(0, iPhoneX?44:0, 0, 0));
-        }];
-        [_parentPlaySmallWindow mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.view.mas_bottom).offset(iPhoneX?-70-34:-70);
-            make.right.mas_equalTo(self.view.mas_right).offset(-10);
-            make.width.mas_equalTo(144);
-            make.height.mas_equalTo(144*9.0/16);
-        }];
         [_overlayView.headerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(70);
         }];
         [_overlayView.footerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(100);//直播为70
+            make.height.mas_equalTo(90);//直播为70
         }];
         //设置iphoneX 的44黑色刘海
         if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
+            [_parentPlayLargerWindow mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.edges.mas_equalTo(UIEdgeInsetsMake(0, iPhoneX?44:0, 0, 0));
+            }];
             [_headerSafeView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.bottom.mas_equalTo(self.view);
                 make.left.mas_equalTo(self.view);
                 make.width.mas_equalTo(iPhoneX?44:0);
             }];
         }else if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
+            [_parentPlayLargerWindow mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, iPhoneX?44:0));
+            }];
             [_headerSafeView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.bottom.mas_equalTo(self.view);
                 make.right.mas_equalTo(self.view);
@@ -848,48 +965,62 @@
     [_overlayView newLayout:[UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait];
     [self.view bringSubviewToFront:_parentPlayLargerWindow];
     [self.view bringSubviewToFront:_parentPlaySmallWindow];
-    [self.view layoutIfNeeded];
-    if (_liveType) {
-        //cc
-        if ([self.overlayView.cutButton.accessibilityIdentifier isEqualToString:@"视频"]) {
-            if (_playDownload) {//离线
-                [_offlinePlayBack changeDocFrame:_parentPlayLargerWindow.bounds];
-                [_offlinePlayBack changePlayerFrame:_parentPlaySmallWindow.bounds];
-            }else {//在线
-                [_requestDataPlayBack changeDocFrame:_parentPlayLargerWindow.bounds];
-                [_requestDataPlayBack changePlayerFrame:_parentPlaySmallWindow.bounds];
-            }
-       
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //这个必须放在主线程中，不然layoutIfNeeded可能不会第一时间生效，一半的可能性
+        [self.view layoutIfNeeded];
+        if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait) {
+            _parentPlaySmallWindow.frame = CGRectMake(IPHONE_WIDTH-144, CGRectGetMaxY(_parentPlayLargerWindow.frame)+50, 144, 144*9.0/16);
         }else {
-            if (_playDownload) {//离线
-                [_offlinePlayBack changeDocFrame:_parentPlaySmallWindow.bounds];
-                [_offlinePlayBack changePlayerFrame:_parentPlayLargerWindow.bounds];
-            }else {//在线
-                [_requestDataPlayBack changeDocFrame:_parentPlaySmallWindow.bounds];
-                [_requestDataPlayBack changePlayerFrame:_parentPlayLargerWindow.bounds];
+            _parentPlaySmallWindow.frame = CGRectMake(IPHONE_WIDTH-144-(iPhoneX?44:0), IPHONE_HEIGHT-144*9.0/16-(iPhoneX?70+34:70), 144, 144*9.0/16);
+        }
+        if (_liveType) {
+            //cc
+            if ([self.overlayView.cutButton.accessibilityIdentifier isEqualToString:@"视频"]) {
+                if (_CCPlayDownload) {//离线
+                    [_offlinePlayBack changeDocFrame:_parentPlayLargerWindow.bounds];
+                    [_offlinePlayBack changePlayerFrame:_parentPlaySmallWindow.bounds];
+                }else {//在线
+                    [_requestDataPlayBack changeDocFrame:_parentPlayLargerWindow.bounds];
+                    [_requestDataPlayBack changePlayerFrame:_parentPlaySmallWindow.bounds];
+                }
+           
+            }else {
+                if (_CCPlayDownload) {//离线
+                    [_offlinePlayBack changeDocFrame:_parentPlaySmallWindow.bounds];
+                    [_offlinePlayBack changePlayerFrame:_parentPlayLargerWindow.bounds];
+                }else {//在线
+                    [_requestDataPlayBack changeDocFrame:_parentPlaySmallWindow.bounds];
+                    [_requestDataPlayBack changePlayerFrame:_parentPlayLargerWindow.bounds];
+                }
+            
             }
+        }else {
+            //gensee
+            if ([self.vodplayer.docSwfView.superview isEqual:_parentPlayLargerWindow]) {
+                self.vodplayer.docSwfView.frame = _parentPlayLargerWindow.bounds ;
+                self.vodplayer.mVideoView.frame = _parentPlaySmallWindow.bounds ;
+            }else {
+                self.vodplayer.docSwfView.frame = _parentPlaySmallWindow.bounds ;
+                self.vodplayer.mVideoView.frame = _parentPlayLargerWindow.bounds ;
+            }
+        }
         
-        }
-    }else {
-        //gensee
-        if ([self.vodplayer.docSwfView.superview isEqual:_parentPlayLargerWindow]) {
-            self.vodplayer.docSwfView.frame = _parentPlayLargerWindow.bounds ;
-            self.vodplayer.mVideoView.frame = _parentPlaySmallWindow.bounds ;
-        }else {
-            self.vodplayer.docSwfView.frame = _parentPlaySmallWindow.bounds ;
-            self.vodplayer.mVideoView.frame = _parentPlayLargerWindow.bounds ;
-        }
-    }
-    [_interfaceView.scrollView setContentOffset:CGPointMake(IPHONE_WIDTH * _toIndex, 0) animated:NO];
+         [_interfaceView.scrollView setContentOffset:CGPointMake(IPHONE_WIDTH * _toIndex, 0) animated:NO];
+    });
+
 }
 // 全屏按钮方法
 - (void)fullScreenButtonAction:(UIButton *)button {
 
+    if (_lockLandscape) {
+        _lockLandscape = NO;
+    }
     if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait) {
         [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationLandscapeRight) forKey:@"orientation"];
     }else {
         [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationPortrait) forKey:@"orientation"];
     }
+
 }
 
 #pragma mark - 数据请求
@@ -926,7 +1057,7 @@
 }
 
 - (void)getCommentData {
-    [_request getCourseComment:_courseID pageIndex:0 pageSize:10 uid:_uid success:^(NSDictionary * _Nonnull dic, BOOL state) {
+    [_request getCourseComment:_courseID pageIndex:0 pageSize:10 uid:(NSInteger)_uid success:^(NSDictionary * _Nonnull dic, BOOL state) {
         if (state) {
             self.isComment = YES;
         }else {
@@ -935,8 +1066,6 @@
     } fail:^(NSError * _Nonnull error) {
     }];
 }
-
-
 
 #pragma mark - 提示信息
 - (void)showHint:(NSString *)hint {
@@ -953,13 +1082,11 @@
 }
 
 #pragma mark -- 懒加载
-
-
 #pragma mark -- dealloc
 - (void)dealloc {
     
     NSLog(@"被销毁了。。。。。。。。。。。。。。");
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
+    [[NSNotificationCenter defaultCenter]removeObserver:self];//xcode7之后这句话可以不写 ，编译器会加上
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

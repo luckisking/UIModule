@@ -60,7 +60,7 @@
     _view.backgroundColor = [UIColor whiteColor];
     _view.layer.cornerRadius = CCGetRealFromPt(10);
     [self addSubview:_view];
-    NSInteger count = [self.resultDic[@"statisics"] count];
+    NSInteger count = [(NSArray *)self.resultDic[@"statisics"] count];
     if(!self.isScreenLandScape) {//竖屏模式下view的约束
         [_view mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self);

@@ -94,6 +94,7 @@
 
 
 
+
 /*y以下所有属性主要是需要分享给分类使用，都是扩展里面的私有属性*/
 
 
@@ -152,4 +153,5 @@
 
 //提示消息
 - (void)showHint:(NSString *)hint ;
+- (void)setUserInfoWihtUid:(long long)uid uname:(NSString *)uname email:(NSString *)email phone:(NSString *)phone  ;
 @end

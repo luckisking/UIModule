@@ -23,7 +23,7 @@
         
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        self.backgroundColor = dominant_bgColor;
+        self.backgroundColor = RGBAColor(242, 242, 242, 1) ;
         
         self.letterArray = @[@"A",@"B",@"C",@"D",@"E",@"F",@"G",@"H"];
         
@@ -53,7 +53,7 @@
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.numberOfLines = 0;
         _titleLabel.font = [UIFont systemFontOfSize:16.0];
-        _titleLabel.textColor = CFontColorMore;
+        _titleLabel.textColor = RGBAColor(102,102,102,1);
     }
     return _titleLabel;
 }
