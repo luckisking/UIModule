@@ -59,6 +59,13 @@ NS_ASSUME_NONNULL_BEGIN
                     commentID:(NSInteger)commentID
                       success:(nullable success)success
                          fail:(nullable failure)failure ;
+
+//获取CC视频回放下载url
+- (void)getCCPlaybackDownloadUrlUserid:(NSString *)userid
+                              recordid:(NSString *)recordid
+                               success:(nullable success)success
+                                  fail:(nullable failure)failure ;
+
 @end
 
 NS_ASSUME_NONNULL_END

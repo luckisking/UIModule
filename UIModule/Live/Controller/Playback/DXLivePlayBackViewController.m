@@ -81,6 +81,16 @@
     //初始化直播（注意先初始化上面的大的和小的直播父视图）
     if (_liveType) {
         [self initCCPlayBack];  //ccsdk
+        //请求cc回放下载地址
+        [_request getCCPlaybackDownloadUrlUserid:_userId recordid:_recordId success:^(NSDictionary * _Nonnull dic, BOOL state) {
+            NSDictionary *record = dic[@"record"];
+            if ([record isKindOfClass:[NSDictionary class]]) {
+                NSString *string = [NSString stringWithFormat:@"%@",record[@"offlinePackageUrl"]];
+                if ([string hasSuffix:@".ccr"]) self.ccDownloadedUrl = string;
+            }
+        } fail:^(NSError * _Nonnull error) {
+            
+        }];
     }else {
         [self initGenseePlayBack];  //genseesdk
     }
@@ -141,6 +151,13 @@
     [_overlayView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0,0,0));
     }];
+    //在线播放的时候等待sdk加载,不然这个页面会闪一下，接着才会被带到前面（看起来不舒服）
+    if (!self.item&&!self.ccDownloadedPlayfile) {
+        _overlayView.hidden = YES;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+              _overlayView.hidden = NO;
+        });
+    }
     [_overlayView addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSignelLargerTap:)]];//点击事件
     //    [_overlayView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)]];//平移事件
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];//平移事件
@@ -212,8 +229,16 @@
 }
 //下载
 - (void)startDownloadAction:(UIButton *)button {
+//    self.ccDownloadedUrl =  @"http://ccr.csslcloud.net/F554B5014CE0DFD3/1BB459E07F6A57299C33DC5901307461/957F63121A023E11.ccr";
+//     [self CCDownload];
+//    return;
     if (_liveType) {
         //cc
+        if (_ccDownloadedPlayfile) {
+            [self showHint:@"该视频已经下载完成"];
+        }else {
+            [self CCDownload];
+        }
     }else {
         //gensee
         if (_genseePlayDownload) {

@@ -112,6 +112,8 @@
             downloadModel.courseID = [NSString stringWithFormat:@"%ld",(long)self.courseID];
             downloadModel.fileUrl = self.teach_material_file;
             [[CCDownloadSessionManager manager] startWithDownloadModel:downloadModel];
+            
+            [self showHint:@"正在下载"];
         }
     }
  

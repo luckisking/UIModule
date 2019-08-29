@@ -229,8 +229,10 @@
     else {
         [self.interfaceView.imageArray insertObject:@"" atIndex:self.interfaceView.imageArray.count];
     }
-    
-    [self.interfaceView.chatArray insertObject:[[chatArray objectAtIndex:0] text] atIndex:self.interfaceView.chatArray.count];
+    //有html5 转义一下
+    NSDictionary* options = @{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType};
+    NSMutableAttributedString* attrs = [[NSMutableAttributedString alloc] initWithData:[[[chatArray objectAtIndex:0] text]  dataUsingEncoding:NSUnicodeStringEncoding] options:options documentAttributes:nil error:nil];
+    [self.interfaceView.chatArray insertObject:attrs.string atIndex:self.interfaceView.chatArray.count];
     if (self.interfaceView.nameArray == nil) {
     }
     else {

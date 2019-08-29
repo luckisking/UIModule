@@ -508,8 +508,10 @@
         //普通用户
         [self.interfaceView.imageArray addObject:@""];
     }
-    
-    [self.interfaceView.chatArray addObject:msg.richText];
+    //有html5 转义一下
+    NSDictionary* options = @{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType};
+    NSMutableAttributedString* attrs = [[NSMutableAttributedString alloc] initWithData:[msg.richText dataUsingEncoding:NSUnicodeStringEncoding] options:options documentAttributes:nil error:nil];
+    [self.interfaceView.chatArray addObject:attrs.string];
     [self.interfaceView.nameArray addObject:user.userName];
 
     [self.interfaceView setupDataScrollPositionBottom];

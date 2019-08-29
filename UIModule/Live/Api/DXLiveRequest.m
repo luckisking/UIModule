@@ -16,6 +16,7 @@
 
 #import "DXLiveRequest.h"
 #import <AFNetworking/AFNetworking.h>
+#import <CommonCrypto/CommonDigest.h>
 
 #import "DXLiveModuleNoteModel.h"
 
@@ -227,5 +228,36 @@
     } fail:^(NSError * _Nonnull error) {
         failure(error);
     } animated:YES];
+}
+
+//获取CC视频回放下载url
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+- (void)getCCPlaybackDownloadUrlUserid:(NSString *)userid
+                              recordid:(NSString *)recordid
+                               success:(nullable success)success
+                                  fail:(nullable failure)failure {
+    //上传参数
+    NSString *timeString = [NSString stringWithFormat:@"%.0f",[[NSDate date] timeIntervalSince1970]];
+    NSString *stringParam = [NSString stringWithFormat:@"recordid=%@&userid=%@&time=%@&salt=6gnTcLBQRuQORaEjkZRk1ThW1vlk5OL2",recordid,userid,timeString];
+    const char* original_str= [stringParam UTF8String];
+    unsigned char digist[CC_MD5_DIGEST_LENGTH]; //CC_MD5_DIGEST_LENGTH = 16
+    CC_MD5(original_str, (uint)strlen(original_str), digist);
+    NSMutableString* outPutStr = [NSMutableString stringWithCapacity:10];
+    for(int  i =0; i<CC_MD5_DIGEST_LENGTH;i++){
+        [outPutStr appendFormat:@"%02x", digist[i]];
+    }
+    NSDictionary *param = @{@"recordid":recordid?:@"",
+                            @"userid":userid?:@"" ,
+                            @"time":timeString ,
+                            @"hash":[outPutStr lowercaseString]
+                            };
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    [manager GET:@"http://api.csslcloud.net/api/v2/record/search" parameters:param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:nil];
+        success(dictionary,YES);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        failure(error);
+    }];
 }
 @end

@@ -156,6 +156,11 @@
     [_overlayView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0,0,0));
     }];
+    //等待sdk加载,不然这个页面会闪一下，接着才会被带到前面
+    _overlayView.hidden = YES;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        _overlayView.hidden = NO;
+    });
     [_overlayView addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSignelLargerTap:)]];
     
 }
@@ -968,15 +973,18 @@
             [self.broadcastManager leaveAndShouldTerminateBroadcast:NO];
             [self.broadcastManager invalidate];
 //            [self.navigationController popViewControllerAnimated:YES];
-            [self dismissViewControllerAnimated:YES completion:nil];
             [self.liveNoteKeyboardView.noteTextView resignFirstResponder];
             [self.liveKeyboardView.KeyboardTextView resignFirstResponder];
+            [self.liveNoteKeyboardView.noteTextView removeFromSuperview];
+            [self.liveKeyboardView.KeyboardTextView removeFromSuperview];
             if (backReasonString == nil) {
                 
             }else{
                 #pragma mark -- 退出直播选中理由接口
                 [_request liveFeedbackWithPhone:_phone email:_email uid:(NSInteger)_uid txt:backReasonString courseId:_courseID sectionID:_sectionID success:nil fail:nil];
             }
+            [self.navigationController popViewControllerAnimated:YES];
+//            [self dismissViewControllerAnimated:YES completion:nil];
             break;
         default:
             break;
